@@ -99,6 +99,8 @@ export class PixivDownloader {
     button.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
+      // モーダルマネージャーをグローバルに登録してから開く
+      (window as any).modalManager = this.modalManager;
       this.modalManager.openModal(illustId);
     });
 
