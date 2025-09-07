@@ -38,13 +38,11 @@ export class PixivAPI {
 
   async getIllustInfo(illustId: string): Promise<IllustInfo> {
     try {
-      // 正しいセレクタを決め打ち
-      const cardSelector = `[href*="/artworks/${illustId}"]`
-      
-      // 該当するillustIdを持つカードを検索
+      // カードを検索 - data-gtm-value属性を使用
+      const cardSelector = '.sc-57c4d86c-5.gTqtlQ, .sc-57c4d86c-5.gTqsCV';
       const cards = Array.from(document.querySelectorAll(cardSelector)) as HTMLElement[];
-      let targetCard: HTMLElement | null = null;
       
+      let targetCard: HTMLElement | null = null;
       for (const card of cards) {
         const link = card.querySelector(`a[data-gtm-value="${illustId}"]`);
         if (link) {
@@ -62,18 +60,26 @@ export class PixivAPI {
         };
       }
 
-      // タイトルを取得（決め打ちセレクタ）
+      // タイトルを取得 - カード内の2つ目のaタグ（実際のタイトルテキストを持つ方）を取得
       let title = 'Unknown Title';
-      const titleElement = targetCard.querySelector('.sc-57c4d86c-6.fNOdSq') as HTMLElement;
-      if (titleElement && titleElement.textContent) {
-        title = titleElement.textContent.trim();
+      const titleLinks = targetCard.querySelectorAll('a[href*="/artworks/"]');
+      if (titleLinks.length > 1) {
+        // 2つ目のaタグがタイトルテキストを持つ
+        const titleLink = titleLinks[1] as HTMLElement;
+        if (titleLink && titleLink.textContent) {
+          title = titleLink.textContent.trim();
+        }
       }
 
-      // ユーザー名を取得（決め打ちセレクタ）
+      // ユーザー名を取得 - data-gtm-valueを持つユーザーリンクから取得
       let userName = 'Unknown User';
-      const userElement = targetCard.querySelector('.sc-4fe4819c-2.QzTPT') as HTMLElement;
-      if (userElement && userElement.textContent) {
-        userName = userElement.textContent.trim();
+      const userLinks = targetCard.querySelectorAll('a[href*="/users/"]');
+      if (userLinks.length > 1) {
+        // 2つ目のaタグがユーザー名を持つ
+        const userLink = userLinks[1] as HTMLElement;
+        if (userLink && userLink.textContent) {
+          userName = userLink.textContent.trim();
+        }
       }
 
       return {
