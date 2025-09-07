@@ -71,6 +71,7 @@ export class ModalManager {
       justify-content: center;
       opacity: 0;
       transition: opacity 0.3s ease;
+      padding: 20px;
     `;
     
     if (this.state.isOpen) {
@@ -125,8 +126,6 @@ export class ModalManager {
             onerror="this.parentElement.innerHTML='<div class=\\'pixiv-image-error\\'>画像の読み込みに失敗しました</div>'"
           >
           <div class="pixiv-download-overlay">
-            <span class="pixiv-download-icon">⬇️</span>
-            <span class="pixiv-download-text">クリックしてダウンロード</span>
           </div>
         </div>
         <div class="pixiv-image-info">
