@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "Pixiv Quick Downloader",
+  "version": "1.0.0",
+  "description": "Download pixiv images easily from search results",
+  "permissions": [
+    "downloads",
+    "storage",
+    "activeTab",
+    "declarativeNetRequestWithHostAccess",
+    "offscreen"
+  ],
+  "host_permissions": [
+    "https://www.pixiv.net/*",
+    "*://*.pximg.net/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.pixiv.net/tags/*/artworks*",
+        "https://www.pixiv.net/search.php*"
+      ],
+      "js": ["content.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Pixiv Downloader"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "ruleset_1",
+      "enabled": true,
+      "path": "rules.json"
+    }]
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*.png"],
+      "matches": ["https://www.pixiv.net/*"]
+    }
+  ]
+}

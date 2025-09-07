@@ -1,0 +1,30 @@
+/* Simple fallback styles */
+.pixiv-download-btn {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  background: rgba(0, 150, 250, 0.9) !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  z-index: 1000 !important;
+  transition: all 0.2s ease !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.pixiv-download-btn:hover {
+  background: rgba(0, 150, 250, 1) !important;
+  transform: scale(1.1) !important;
+}
+
+.pixiv-card:hover .pixiv-download-btn {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
