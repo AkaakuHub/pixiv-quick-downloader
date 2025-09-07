@@ -33,25 +33,15 @@ export class PixivDownloader {
   }
 
   private findIllustCards(): HTMLElement[] {
-    // 様々なセレクタを試す
-    const selectors = [
-      '[data-id]', // data-id属性を持つ要素
-      '[href*="/artworks/"]', // artworksリンクを含む要素
-      '.sc-d98f2c-0', // pixivのカードクラス
-      '[class*="illust"]', // "illust"を含むクラス
-      '[class*="card"]' // "card"を含むクラス
-    ];
-
-    for (const selector of selectors) {
-      const elements = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
-      if (elements.length > 0) {
-        const filtered = elements.filter(el => this.getIllustId(el));
-        if (filtered.length > 0) {
-          // カードにクラスを追加してTailwindのホバー効果を適用
-          filtered.forEach(el => el.classList.add('pixiv-card'));
-          return filtered;
-        }
-      }
+    // 正しいセレクタを決め打ち
+    const selector = `[href*="/artworks/"]`;
+    const elements = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
+    
+    const filtered = elements.filter(el => this.getIllustId(el));
+    if (filtered.length > 0) {
+      // カードにクラスを追加してホバー効果を適用
+      filtered.forEach(el => el.classList.add('pixiv-card'));
+      return filtered;
     }
 
     return [];
@@ -63,17 +53,7 @@ export class PixivDownloader {
     const hrefMatch = href.match(/\/artworks\/(\d+)/);
     if (hrefMatch) return hrefMatch[1];
 
-    // data-id属性から取得
-    const dataId = element.getAttribute('data-id');
-    if (dataId && /^\d+$/.test(dataId)) return dataId;
-
-    // 子要素から検索
-    const childLink = element.querySelector('a[href*="/artworks/"]');
-    if (childLink) {
-      const childHref = childLink.getAttribute('href') || '';
-      const childMatch = childHref.match(/\/artworks\/(\d+)/);
-      if (childMatch) return childMatch[1];
-    }
+    console.warn('Failed to extract illustId from element');
 
     return null;
   }

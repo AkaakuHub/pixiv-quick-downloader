@@ -79,3 +79,23 @@ The extension uses Pixiv's AJAX API endpoints:
 - Compatible with modern Chrome browsers
 - Requires user to be logged into pixiv
 - Referer headers are automatically set for API requests
+
+## セレクタの実装について
+
+この拡張機能は、フォールバックロジックやトライアンドエラーを排除し、決め打ちのセレクタを使用しています。
+
+### カード検出セレクタ
+- カード要素: `.sc-57c4d86c-5.gTqtlQ, .sc-57c4d86c-5.gTqsCV`
+- 作品ID取得: `a[data-gtm-value]` 属性から取得
+- タイトル取得: `.sc-57c4d86c-6.fNOdSq` 要素から取得
+- ユーザー名取得: `.sc-4fe4819c-2.QzTPT` 要素から取得
+
+### HTML構造の分析
+`cc-docs/demo/` フォルダにあるHTMLファイルを分析し、pixivの実際のDOM構造に基づいてセレクタを実装しています。
+- `sample.html`: 個別作品ページの構造
+- `search.html`: 検索結果ページの構造
+
+### 改善点
+- 以前のバージョンでは「Unknown Title」と表示される問題がありましたが、正しいセレクタを使用することで解決しました
+- 複数のフォールバック処理を排除し、直接的で信頼性の高い実装に変更しました
+- Google Tag Manager用の `data-gtm-value` 属性を活用して正確な作品IDを取得しています

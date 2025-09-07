@@ -38,27 +38,22 @@ export class PixivAPI {
 
   async getIllustInfo(illustId: string): Promise<IllustInfo> {
     try {
-      // 様々な方法でカードを検索
-      const selectors = [
-        `[href*="/artworks/${illustId}"]`,
-        `[data-id*="${illustId}"]`,
-        `a[href*="${illustId}"]`
-      ];
-
-      let card: HTMLElement | null = null;
-      for (const selector of selectors) {
-        card = document.querySelector(selector) as HTMLElement;
-        if (card) {
-          // 親要素を探す
-          while (card && !card.closest('[class*="card"], [class*="illust"], [data-id]')) {
-            card = card.parentElement;
-          }
+      // 正しいセレクタを決め打ち
+      const cardSelector = `[href*="/artworks/${illustId}"]`
+      
+      // 該当するillustIdを持つカードを検索
+      const cards = Array.from(document.querySelectorAll(cardSelector)) as HTMLElement[];
+      let targetCard: HTMLElement | null = null;
+      
+      for (const card of cards) {
+        const link = card.querySelector(`a[data-gtm-value="${illustId}"]`);
+        if (link) {
+          targetCard = card;
           break;
         }
       }
-
-      if (!card) {
-        // 最終手段：ページ全体から情報を取得
+      
+      if (!targetCard) {
         return {
           id: illustId,
           title: `作品 ${illustId}`,
@@ -67,27 +62,24 @@ export class PixivAPI {
         };
       }
 
-      // タイトルを取得（様々な方法を試す）
+      // タイトルを取得（決め打ちセレクタ）
       let title = 'Unknown Title';
-      const titleSelectors = [
-        '[data-title]',
-        'h1',
-        '.title',
-        '[class*="title"]'
-      ];
+      const titleElement = targetCard.querySelector('.sc-57c4d86c-6.fNOdSq') as HTMLElement;
+      if (titleElement && titleElement.textContent) {
+        title = titleElement.textContent.trim();
+      }
 
-      for (const selector of titleSelectors) {
-        const titleElement = card.querySelector(selector) || document.querySelector(selector);
-        if (titleElement && titleElement.textContent) {
-          title = titleElement.textContent.trim();
-          break;
-        }
+      // ユーザー名を取得（決め打ちセレクタ）
+      let userName = 'Unknown User';
+      const userElement = targetCard.querySelector('.sc-4fe4819c-2.QzTPT') as HTMLElement;
+      if (userElement && userElement.textContent) {
+        userName = userElement.textContent.trim();
       }
 
       return {
         id: illustId,
         title,
-        userName: 'Unknown User',
+        userName,
         pageCount: 1
       };
     } catch (error) {
