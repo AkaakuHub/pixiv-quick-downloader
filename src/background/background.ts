@@ -58,12 +58,12 @@ class BackgroundService {
     }
   }
 
-  private async handleDownload(payload: { url: string; filename: string }) {
+  private async handleDownload(payload: { url: string; filename: string; illustId?: string }) {
     try {
       // 画像を取得
       const response = await fetch(payload.url, {
         headers: {
-          'Referer': `https://www.pixiv.net/artworks/${payload.filename.split('_')[0]}`,
+          'Referer': `https://www.pixiv.net/artworks/${payload.illustId}`,
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
         }
       });
@@ -86,10 +86,13 @@ class BackgroundService {
         reader.readAsDataURL(blob);
       });
       
+      // ファイル名をデコード
+      const decodedFilename = decodeURIComponent(payload.filename);
+      
       // data URLでダウンロード
       await chrome.downloads.download({
         url: dataUrl,
-        filename: payload.filename,
+        filename: decodedFilename,
         saveAs: false,
         conflictAction: 'uniquify'
       });
@@ -105,7 +108,7 @@ class BackgroundService {
     
     await chrome.offscreen.createDocument({
       url: chrome.runtime.getURL('offscreen.html'),
-      reasons: ['BLOBS'],
+      reasons: ['BLOBS' as any],
       justification: 'Download blobs with proper referer headers'
     });
   }

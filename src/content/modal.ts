@@ -179,13 +179,14 @@ export class ModalManager {
     const imageWrappers = this.modal.querySelectorAll('.pixiv-image-wrapper');
     imageWrappers.forEach((wrapper, index) => {
       const url = wrapper.getAttribute('data-url');
-      const safeTitle = (this.state.currentIllust?.title || 'untitled').replace(/[^\w\s-]/g, '').trim();
+      console.log("title", this.state.currentIllust?.title);
+      const safeTitle = encodeURIComponent((this.state.currentIllust?.title || 'untitled').trim());
       
       if (url) {
         wrapper.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          this.downloadImage(url, `${safeTitle}_${index + 1}.png`);
+          this.downloadImage(url, `${safeTitle}_${index + 1}.png`, this.state.currentIllust?.id);
         });
       }
     });
@@ -213,14 +214,15 @@ export class ModalManager {
 
   
   
-  async downloadImage(url: string, filename: string) {
+  async downloadImage(url: string, filename: string, illustId?: string) {
     try {
       // background script経由でダウンロード
       const response = await chrome.runtime.sendMessage({
         type: 'DOWNLOAD_IMAGE',
         payload: {
           url: url,
-          filename: filename
+          filename: filename,
+          illustId: illustId
         }
       });
       
@@ -235,12 +237,13 @@ export class ModalManager {
   async downloadAllImages() {
     if (!this.state.currentIllust || !this.state.images.length) return;
 
-    const folderName = `${this.state.currentIllust.id}_${this.state.currentIllust.title.replace(/[^\w\s-]/g, '')}`;
+    const safeTitle = encodeURIComponent((this.state.currentIllust?.title || 'untitled').trim());
+    const folderName = safeTitle;
     
     for (let i = 0; i < this.state.images.length; i++) {
       const url = this.state.images[i];
       const filename = `${folderName}/${i + 1}.png`;
-      await this.downloadImage(url, filename);
+      await this.downloadImage(url, filename, this.state.currentIllust?.id);
       
       // レートリミット対策
       await new Promise(resolve => setTimeout(resolve, 500));
