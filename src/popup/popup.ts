@@ -21,29 +21,29 @@ class PopupManager {
   }
 
   private setupEventListeners() {
-    document.getElementById('saveSettings')?.addEventListener('click', () => {
-      this.saveSettings();
-    });
-
     document.getElementById('openHelp')?.addEventListener('click', () => {
       this.openHelp();
     });
 
-    // 設定変更時のリアルタイム更新
-    document.getElementById('downloadPath')?.addEventListener('input', (e) => {
+    // 設定変更時のリアルタイム更新と自動保存
+    document.getElementById('downloadPath')?.addEventListener('input', async (e) => {
       this.settings.downloadPath = (e.target as HTMLInputElement).value;
+      await this.saveSettings();
     });
 
-    document.getElementById('autoCloseModal')?.addEventListener('change', (e) => {
+    document.getElementById('autoCloseModal')?.addEventListener('change', async (e) => {
       this.settings.autoCloseModal = (e.target as HTMLInputElement).checked;
+      await this.saveSettings();
     });
 
-    document.getElementById('showPreview')?.addEventListener('change', (e) => {
+    document.getElementById('showPreview')?.addEventListener('change', async (e) => {
       this.settings.showPreview = (e.target as HTMLInputElement).checked;
+      await this.saveSettings();
     });
 
-    document.getElementById('filenameFormat')?.addEventListener('change', (e) => {
+    document.getElementById('filenameFormat')?.addEventListener('change', async (e) => {
       this.settings.filenameFormat = (e.target as HTMLSelectElement).value as FilenameFormat;
+      await this.saveSettings();
     });
   }
 
@@ -59,35 +59,27 @@ class PopupManager {
     if (filenameFormatSelect) filenameFormatSelect.value = this.settings.filenameFormat;
   }
 
-  private async loadSettings() {
+  public async loadSettings() {
     try {
-      console.log('Popup: Loading settings...');
       const response = await chrome.runtime.sendMessage({ type: 'GET_SETTINGS' });
-      console.log('Popup: GET_SETTINGS response:', response);
       
       if (response.success && response.data) {
         const loadedSettings = response.data;
-        console.log('Popup: Loaded settings:', loadedSettings);
         
         // 型安全な設定マージ
         if (loadedSettings.downloadPath !== undefined) {
           this.settings.downloadPath = loadedSettings.downloadPath;
-          console.log('Popup: Set downloadPath to:', loadedSettings.downloadPath);
         }
         if (loadedSettings.autoCloseModal !== undefined) {
           this.settings.autoCloseModal = loadedSettings.autoCloseModal;
-          console.log('Popup: Set autoCloseModal to:', loadedSettings.autoCloseModal);
         }
         if (loadedSettings.showPreview !== undefined) {
           this.settings.showPreview = loadedSettings.showPreview;
-          console.log('Popup: Set showPreview to:', loadedSettings.showPreview);
         }
         if (loadedSettings.filenameFormat !== undefined) {
           this.settings.filenameFormat = loadedSettings.filenameFormat as FilenameFormat;
-          console.log('Popup: Set filenameFormat to:', loadedSettings.filenameFormat);
         }
         
-        console.log('Popup: Final settings after load:', this.settings);
       } else {
         console.error('Popup: Failed to load settings - response:', response);
       }
@@ -105,6 +97,9 @@ class PopupManager {
 
       if (response.success) {
         this.showStatus('設定を保存しました', 'success');
+        
+        // モーダルが開いている場合に設定を再読み込みさせるためのイベントを発火
+        this.notifySettingsChanged();
       } else {
         this.showStatus('設定の保存に失敗しました', 'error');
       }
@@ -112,6 +107,21 @@ class PopupManager {
       console.error('Failed to save settings:', error);
       this.showStatus('設定の保存に失敗しました', 'error');
     }
+  }
+
+  private notifySettingsChanged() {
+    // コンテントスクリプトに設定変更を通知
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach(tab => {
+        if (tab.id && tab.url?.includes('pixiv.net')) {
+          chrome.tabs.sendMessage(tab.id, {
+            type: 'SETTINGS_CHANGED'
+          }).catch(() => {
+            // メッセージ送信に失敗しても無視（コンテントスクリプトが動作していない可能性がある）
+          });
+        }
+      });
+    });
   }
 
   private showStatus(message: string, type: 'success' | 'error') {

@@ -2,7 +2,7 @@ import { ModalManager } from './modal';
 import '../styles/main.css';
 
 export class PixivDownloader {
-  private modalManager: ModalManager;
+  public modalManager: ModalManager;
   private observer: MutationObserver | null = null;
 
   constructor() {
@@ -148,6 +148,17 @@ if (typeof MutationObserver !== 'undefined') {
     }
   }).observe(document, { subtree: true, childList: true });
 }
+
+// 設定変更通知を受信
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === 'SETTINGS_CHANGED') {
+    // モーダルマネージャーが存在する場合、設定を再読み込み
+    if (downloader && downloader.modalManager) {
+      downloader.modalManager.loadSettings();
+    }
+  }
+  return true;
+});
 
 // 初期化実行
 initExtension();

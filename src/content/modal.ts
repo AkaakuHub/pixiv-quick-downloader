@@ -25,7 +25,7 @@ export class ModalManager {
     this.loadSettings();
   }
 
-  private async loadSettings() {
+  public async loadSettings() {
     try {
       const response = await chrome.runtime.sendMessage({ type: 'GET_SETTINGS' });
       if (response.success && response.data) {
