@@ -36,7 +36,7 @@ export const translations: Translations = {
     zh: "图片加载失败",
     "zh-CN": "图片加载失败",
     "zh-TW": "圖片載入失敗",
-    ko: "이미지 로딩 실패",
+    ko: "이미지를 불러오는 데 실패했습니다",
   },
   page: {
     en: "Page {current} / {total}",
@@ -72,11 +72,11 @@ export const translations: Translations = {
   },
   downloadAll: {
     en: "Download All ({count} images)",
-    ja: "全てダウンロード ({count}枚)",
+    ja: "すべてダウンロード ({count}枚)",
     zh: "下载全部 ({count} 张)",
     "zh-CN": "下载全部 ({count} 张)",
     "zh-TW": "下載全部 ({count} 張)",
-    ko: "전체 다운로드 ({count}개)",
+    ko: "전체 다운로드 ({count}장)",
   },
   downloadFailed: {
     en: "Download failed",
@@ -84,7 +84,7 @@ export const translations: Translations = {
     zh: "下载失败",
     "zh-CN": "下载失败",
     "zh-TW": "下載失敗",
-    ko: "다운로드 실패",
+    ko: "다운로드에 실패했습니다",
   },
 
   // Popup translations
@@ -98,7 +98,7 @@ export const translations: Translations = {
   },
   filenameFormat: {
     en: "Filename Format",
-    ja: "ファイル名形式",
+    ja: "ファイル名の形式",
     zh: "文件名格式",
     "zh-CN": "文件名格式",
     "zh-TW": "檔案名格式",
@@ -106,35 +106,35 @@ export const translations: Translations = {
   },
   formatTitlePage: {
     en: "Title_Page",
-    ja: "作品名_ページ",
+    ja: "作品名_ページ番号",
     zh: "标题_页码",
     "zh-CN": "标题_页码",
     "zh-TW": "標題_頁碼",
-    ko: "제목_페이지",
+    ko: "제목_페이지 번호",
   },
   formatIdPage: {
     en: "ID_Page",
-    ja: "作品ID_ページ",
+    ja: "作品ID_ページ番号",
     zh: "作品ID_页码",
     "zh-CN": "作品ID_页码",
     "zh-TW": "作品ID_頁碼",
-    ko: "작품ID_페이지",
+    ko: "작품ID_페이지 번호",
   },
   formatAuthorTitlePage: {
     en: "Author/Title_Page",
-    ja: "作者名/作品名_ページ",
+    ja: "作者名/作品名_ページ番号",
     zh: "作者/标题_页码",
     "zh-CN": "作者/标题_页码",
     "zh-TW": "作者/標題_頁碼",
-    ko: "작가/제목_페이지",
+    ko: "작가/제목_페이지 번호",
   },
   formatAuthorIdPage: {
     en: "Author/ID_Page",
-    ja: "作者名/作品ID_ページ",
+    ja: "作者名/作品ID_ページ番号",
     zh: "作者/作品ID_页码",
     "zh-CN": "作者/作品ID_页码",
     "zh-TW": "作者/作品ID_頁碼",
-    ko: "작가/작품ID_페이지",
+    ko: "작가/작품ID_페이지 번호",
   },
   settingsSaved: {
     en: "Settings saved",
@@ -150,6 +150,6 @@ export const translations: Translations = {
     zh: "保存设置失败",
     "zh-CN": "保存设置失败",
     "zh-TW": "儲存設定失敗",
-    ko: "설정 저장 실패",
+    ko: "설정 저장에 실패했습니다",
   },
 };
