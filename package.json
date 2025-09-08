@@ -1,12 +1,13 @@
 {
-  "name": "pixiv-downloader-extension",
+  "name": "pixiv-quick-downloader",
   "version": "1.0.0",
-  "description": "Pixiv image downloader extension with TypeScript",
+  "description": "Pixiv original image downloader extension with TypeScript",
   "main": "dist/bundle.js",
   "type": "module",
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
+    "build:store": "pnpm build && mkdir -p package && cp -r dist/* package/ && cd package && zip -r ../pixiv-downloader-extension-v$(node -p \"require('./package.json').version\").zip . && cd .. && rm -rf package",
     "watch": "webpack --mode development --watch",
     "clean": "rm -rf dist/*",
     "type-check": "tsc --noEmit",
