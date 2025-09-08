@@ -3,9 +3,6 @@ import { ExtensionSettings, FilenameFormat, FetchImagePayload } from "../types";
 // バックグラウンドサービスワーカー
 class BackgroundService {
   private settings: ExtensionSettings = {
-    downloadPath: "pixiv_downloads",
-    autoCloseModal: true,
-    showPreview: true,
     filenameFormat: "title_page" as FilenameFormat,
   };
 
@@ -39,7 +36,7 @@ class BackgroundService {
   private async handleMessage(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     request: { type: string; payload?: any },
-    sender: chrome.runtime.MessageSender,
+    _sender: chrome.runtime.MessageSender,
     sendResponse: (response: unknown) => void
   ) {
     try {
@@ -55,12 +52,6 @@ class BackgroundService {
 
         case "UPDATE_SETTINGS": {
           const newSettings = request.payload as Partial<ExtensionSettings>;
-          if (newSettings.downloadPath !== undefined)
-            this.settings.downloadPath = newSettings.downloadPath;
-          if (newSettings.autoCloseModal !== undefined)
-            this.settings.autoCloseModal = newSettings.autoCloseModal;
-          if (newSettings.showPreview !== undefined)
-            this.settings.showPreview = newSettings.showPreview;
           if (newSettings.filenameFormat !== undefined)
             this.settings.filenameFormat = newSettings.filenameFormat as FilenameFormat;
           await this.saveSettings();
@@ -138,12 +129,6 @@ class BackgroundService {
     if (result.settings) {
       const loadedSettings = result.settings as ExtensionSettings;
       // 型安全な設定マージ
-      if (loadedSettings.downloadPath !== undefined)
-        this.settings.downloadPath = loadedSettings.downloadPath;
-      if (loadedSettings.autoCloseModal !== undefined)
-        this.settings.autoCloseModal = loadedSettings.autoCloseModal;
-      if (loadedSettings.showPreview !== undefined)
-        this.settings.showPreview = loadedSettings.showPreview;
       if (loadedSettings.filenameFormat !== undefined)
         this.settings.filenameFormat = loadedSettings.filenameFormat as FilenameFormat;
     }

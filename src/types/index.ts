@@ -38,9 +38,6 @@ export type FilenameFormat = "title_page" | "id_page" | "author_title_page" | "a
 
 // Extension Settings
 export interface ExtensionSettings {
-  downloadPath: string;
-  autoCloseModal: boolean;
-  showPreview: boolean;
   filenameFormat: FilenameFormat;
 }
 
@@ -60,9 +57,6 @@ export interface DownloadImagePayload {
 }
 
 export interface UpdateSettingsPayload {
-  downloadPath?: string;
-  autoCloseModal?: boolean;
-  showPreview?: boolean;
   filenameFormat?: FilenameFormat;
 }
 

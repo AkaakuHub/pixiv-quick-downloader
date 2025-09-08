@@ -8,9 +8,6 @@ class PopupManager {
 
   constructor() {
     this.settings = {
-      downloadPath: "pixiv_downloads",
-      autoCloseModal: true,
-      showPreview: true,
       filenameFormat: "title_page",
     };
     this.i18n = I18n.getInstance();

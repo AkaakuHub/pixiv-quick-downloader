@@ -13,9 +13,6 @@ export class ModalManager {
     error: null,
   };
   private settings: ExtensionSettings = {
-    downloadPath: "pixiv_downloads",
-    autoCloseModal: true,
-    showPreview: true,
     filenameFormat: "title_page",
   };
   private i18n: I18n;
