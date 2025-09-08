@@ -4,34 +4,40 @@ A Chrome extension for downloading original images from pixiv search results pag
 
 ## Features
 
-- Download multiple original images from pixiv search results
-- Batch download functionality
-- Easy-to-use interface
+- Download original images directly from pixiv search results
+- Batch download with custom filenames
+- Easy-to-use interface with modal download dialog
+- Customizable folder structure for downloads
 - No external servers - all processing happens locally
 
-## Installation(dev)
+## Usage
+
+### Downloading Images
+
+1. Open any pixiv search results page
+2. Click the light blue download button in the bottom-left corner of any illustration card
+3. A modal will open showing the image
+4. Click on the image to download (you can specify a custom filename)
+
+### Configuring Download Settings
+
+1. Click the extension icon in the browser toolbar
+2. Configure your preferred folder structure for downloads
+
+## Installation
 
 1. Download or clone this repository
 2. Open Chrome and go to `chrome://extensions/`
 3. Enable "Developer mode" in the top right
 4. Click "Load unpacked" and select the extension directory
 
-## Usage
-
-1. Navigate to pixiv search results page (`https://www.pixiv.net/tags/*`)
-2. Click the extension icon in the browser toolbar
-3. Select the images you want to download
-4. Click the download button
-
 ## Permissions
 
 This extension requires the following permissions:
 - `downloads` - To save images to your computer
 - `storage` - To store user preferences
-- `activeTab` - To interact with the current pixiv page
 - `tabs` - To manage extension tabs
 - `declarativeNetRequestWithHostAccess` - To handle image requests
-- `offscreen` - For background processing
 
 ## Privacy Policy
 
