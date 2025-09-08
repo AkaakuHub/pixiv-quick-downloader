@@ -96,16 +96,32 @@ export class ModalManager {
 
     switch (this.settings.filenameFormat) {
       case "title_page":
-        return `${encodedTitle}_${pageIndex + 1}.png`;
+        return `${encodedTitle}_${pageIndex + 1}`;
       case "id_page":
-        return `${id}_${pageIndex + 1}.png`;
+        return `${id}_${pageIndex + 1}`;
       case "author_title_page":
-        return `${encodedUserName}/${encodedTitle}_${pageIndex + 1}.png`;
+        return `${encodedUserName}/${encodedTitle}_${pageIndex + 1}`;
       case "author_id_page":
-        return `${encodedUserName}/${id}_${pageIndex + 1}.png`;
+        return `${encodedUserName}/${id}_${pageIndex + 1}`;
       default:
-        return `${encodedTitle}_${pageIndex + 1}.png`;
+        return `${encodedTitle}_${pageIndex + 1}`;
     }
+  }
+
+  private getFileExtensionFromUrl(url: string): string {
+    const urlParts = url.split(".");
+    const extension = urlParts[urlParts.length - 1].split("?")[0].split("#")[0];
+    return extension.toLowerCase();
+  }
+
+  private ensureFileExtension(filename: string, url: string): string {
+    const extension = this.getFileExtensionFromUrl(url);
+
+    // 既存の拡張子を削除（.で始まり、英数字と一部記号で構成される拡張子）
+    const filenameWithoutExtension = filename.replace(/\.[a-zA-Z0-9_-]+$/, "");
+
+    // URLから取得した正しい拡張子を付与
+    return `${filenameWithoutExtension}.${extension}`;
   }
 
   private generateFolderName(title: string, userName: string, id: string): string {
@@ -249,7 +265,7 @@ export class ModalManager {
           <input 
             type="text" 
             class="pixiv-filename-input" 
-            placeholder="ファイル名を入力 (例: folder/name.png)"
+            placeholder="ファイル名を入力 (例: folder/name)"
             data-default-filename="${defaultFilename}"
             data-index="${index}"
             value=""
@@ -364,12 +380,15 @@ export class ModalManager {
       // ファイル名をサニタイズ
       const sanitizedFilename = this.sanitizeFilename(filename);
 
+      // URLから拡張子を取得して付与
+      const finalFilename = this.ensureFileExtension(sanitizedFilename, url);
+
       // background script経由でダウンロード
       const response = await chrome.runtime.sendMessage({
         type: "DOWNLOAD_IMAGE",
         payload: {
           url: url,
-          filename: sanitizedFilename,
+          filename: finalFilename,
           illustId: illustId,
         },
       });
@@ -393,7 +412,7 @@ export class ModalManager {
 
     for (let i = 0; i < this.state.images.length; i++) {
       const url = this.state.images[i];
-      const filename = `${folderName}/${i + 1}.png`;
+      const filename = `${folderName}/${i + 1}`;
       await this.downloadImage(url, filename, this.state.currentIllust?.id);
 
       // レートリミット対策
