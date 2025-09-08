@@ -193,6 +193,33 @@
   font-weight: 500 !important;
 }
 
+.pixiv-filename-input {
+  width: 100% !important;
+  padding: 8px 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+  margin-top: 8px !important;
+  box-sizing: border-box !important;
+}
+
+.pixiv-filename-input:focus {
+  outline: none !important;
+  border-color: #0096fa !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 0 0 2px rgba(0, 150, 250, 0.2) !important;
+}
+
+.pixiv-filename-input::placeholder {
+  color: #666 !important;
+  font-size: 11px !important;
+  opacity: 0.8 !important;
+}
+
 /* Download Overlay */
 .pixiv-download-overlay {
   position: absolute !important;

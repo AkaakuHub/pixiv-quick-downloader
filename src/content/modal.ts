@@ -37,25 +37,53 @@ export class ModalManager {
   }
 
   private sanitizeFilename(filename: string): string {
-    // Windowsで使えない文字を置換
-    return (
-      filename
-        .replace(/</g, "＜")
-        .replace(/>/g, "＞")
-        .replace(/:/g, "：")
-        .replace(/"/g, "＂")
-        .replace(/\|/g, "｜")
-        .replace(/\?/g, "？")
-        .replace(/\*/g, "＊")
-        .replace(/\\/g, "￥")
-        .replace(/\//g, "／") // / を ／ に置換
-        // eslint-disable-next-line no-control-regex
-        .replace(/[\x00-\x1F\x7F]/g, "") // 制御文字を削除
-        .replace(/[ ]+/g, " ") // 連続するスペースを1つに
-        .trim() // 先頭と末尾のスペースを削除
-        .replace(/^\./, "_") // 先頭のドットを _ に置換
-        .replace(/[/]+/g, "/")
-    ); // 連続するスラッシュを1つに
+    // ディレクトリパスとファイル名を分離
+    const pathParts = filename.split("/");
+    const filenamePart = pathParts.pop() || "";
+    const directories = pathParts;
+
+    // ファイル名部分のサニタイズ（スラッシュは除く）
+    const sanitizedFilename = filenamePart
+      .replace(/</g, "＜")
+      .replace(/>/g, "＞")
+      .replace(/:/g, "：")
+      .replace(/"/g, "＂")
+      .replace(/\|/g, "｜")
+      .replace(/\?/g, "？")
+      .replace(/\*/g, "＊")
+      .replace(/\\/g, "￥")
+      // eslint-disable-next-line no-control-regex
+      .replace(/[\x00-\x1F\x7F]/g, "") // 制御文字を削除
+      .replace(/[ ]+/g, " ") // 連続するスペースを1つに
+      .trim() // 先頭と末尾のスペースを削除
+      .replace(/^\./, "_"); // 先頭のドットを _ に置換
+
+    // ディレクトリ部分のサニタイズ
+    const sanitizedDirectories = directories.map(
+      dir =>
+        dir
+          .replace(/</g, "＜")
+          .replace(/>/g, "＞")
+          .replace(/:/g, "：")
+          .replace(/"/g, "＂")
+          .replace(/\|/g, "｜")
+          .replace(/\?/g, "？")
+          .replace(/\*/g, "＊")
+          .replace(/\\/g, "￥")
+          // eslint-disable-next-line no-control-regex
+          .replace(/[\x00-\x1F\x7F]/g, "") // 制御文字を削除
+          .replace(/[ ]+/g, " ") // 連続するスペースを1つに
+          .trim() // 先頭と末尾のスペースを削除
+          .replace(/^\./, "_") // 先頭のドットを _ に置換
+          .replace(/[/]+/g, "/") // 連続するスラッシュを1つに
+    );
+
+    // ディレクトリとファイル名を結合
+    if (sanitizedDirectories.length > 0) {
+      return sanitizedDirectories.join("/") + "/" + sanitizedFilename;
+    }
+
+    return sanitizedFilename;
   }
 
   private generateFilename(title: string, userName: string, id: string, pageIndex: number): string {
@@ -197,6 +225,12 @@ export class ModalManager {
 
     const imageItems = this.state.images
       .map((url, index) => {
+        const defaultFilename = this.generateFilename(
+          this.state.currentIllust?.title || "untitled",
+          this.state.currentIllust?.userName || "Unknown User",
+          this.state.currentIllust?.id || "unknown",
+          index
+        );
         // ダウンロード対象の画像をそのまま表示
         return `
       <div class="pixiv-image-card">
@@ -212,6 +246,14 @@ export class ModalManager {
         </div>
         <div class="pixiv-image-info">
           <div class="pixiv-page-number">ページ ${index + 1} / ${this.state.images.length}</div>
+          <input 
+            type="text" 
+            class="pixiv-filename-input" 
+            placeholder="ファイル名を入力 (例: folder/name.png)"
+            data-default-filename="${defaultFilename}"
+            data-index="${index}"
+            value=""
+          >
         </div>
       </div>
     `;
@@ -271,12 +313,26 @@ export class ModalManager {
         wrapper.addEventListener("click", e => {
           e.preventDefault();
           e.stopPropagation();
-          const filename = this.generateFilename(
-            this.state.currentIllust?.title || "untitled",
-            this.state.currentIllust?.userName || "Unknown User",
-            this.state.currentIllust?.id || "unknown",
-            index
-          );
+
+          // 同じカード内のファイル名入力欄を取得
+          const card = wrapper.closest(".pixiv-image-card");
+          const filenameInput = card?.querySelector<HTMLInputElement>(".pixiv-filename-input");
+
+          // 入力されたファイル名を使用、空の場合はデフォルトファイル名を使用
+          let filename;
+          if (filenameInput && filenameInput.value.trim()) {
+            filename = filenameInput.value.trim();
+          } else {
+            filename =
+              filenameInput?.getAttribute("data-default-filename") ||
+              this.generateFilename(
+                this.state.currentIllust?.title || "untitled",
+                this.state.currentIllust?.userName || "Unknown User",
+                this.state.currentIllust?.id || "unknown",
+                index
+              );
+          }
+
           this.downloadImage(url, filename, this.state.currentIllust?.id);
         });
       }
@@ -305,12 +361,15 @@ export class ModalManager {
 
   async downloadImage(url: string, filename: string, illustId?: string) {
     try {
+      // ファイル名をサニタイズ
+      const sanitizedFilename = this.sanitizeFilename(filename);
+
       // background script経由でダウンロード
       const response = await chrome.runtime.sendMessage({
         type: "DOWNLOAD_IMAGE",
         payload: {
           url: url,
-          filename: filename,
+          filename: sanitizedFilename,
           illustId: illustId,
         },
       });
