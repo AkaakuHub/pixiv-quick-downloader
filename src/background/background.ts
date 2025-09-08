@@ -112,10 +112,12 @@ class BackgroundService {
       // ファイル名をデコード
       const decodedFilename = decodeURIComponent(payload.filename);
 
+      const finalDestination = `pixiv_quick_downloader/${decodedFilename}`;
+
       // data URLでダウンロード
       await chrome.downloads.download({
         url: dataUrl,
-        filename: decodedFilename,
+        filename: finalDestination,
         saveAs: false,
         conflictAction: "uniquify",
       });

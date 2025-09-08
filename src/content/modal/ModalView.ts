@@ -81,6 +81,8 @@ export class ModalView {
           index
         );
 
+        // _master1200を付与したURLプレビュー用やろうと思ったけど、こっちもrefererいるから無駄になる
+
         return `
       <div class="pixiv-image-card">
         <div class="pixiv-image-wrapper" data-url="${url}" data-index="${index}">
