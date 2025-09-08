@@ -22,21 +22,6 @@ class PopupManager {
 
   private setupEventListeners() {
     // 設定変更時のリアルタイム更新と自動保存
-    document.getElementById('downloadPath')?.addEventListener('input', async (e) => {
-      this.settings.downloadPath = (e.target as HTMLInputElement).value;
-      await this.saveSettings();
-    });
-
-    document.getElementById('autoCloseModal')?.addEventListener('change', async (e) => {
-      this.settings.autoCloseModal = (e.target as HTMLInputElement).checked;
-      await this.saveSettings();
-    });
-
-    document.getElementById('showPreview')?.addEventListener('change', async (e) => {
-      this.settings.showPreview = (e.target as HTMLInputElement).checked;
-      await this.saveSettings();
-    });
-
     document.getElementById('filenameFormat')?.addEventListener('change', async (e) => {
       this.settings.filenameFormat = (e.target as HTMLSelectElement).value as FilenameFormat;
       await this.saveSettings();
@@ -44,14 +29,8 @@ class PopupManager {
   }
 
   private updateUI() {
-    const downloadPathInput = document.getElementById('downloadPath') as HTMLInputElement;
-    const autoCloseModalCheckbox = document.getElementById('autoCloseModal') as HTMLInputElement;
-    const showPreviewCheckbox = document.getElementById('showPreview') as HTMLInputElement;
     const filenameFormatSelect = document.getElementById('filenameFormat') as HTMLSelectElement;
 
-    if (downloadPathInput) downloadPathInput.value = this.settings.downloadPath;
-    if (autoCloseModalCheckbox) autoCloseModalCheckbox.checked = this.settings.autoCloseModal;
-    if (showPreviewCheckbox) showPreviewCheckbox.checked = this.settings.showPreview;
     if (filenameFormatSelect) filenameFormatSelect.value = this.settings.filenameFormat;
   }
 
@@ -63,15 +42,6 @@ class PopupManager {
         const loadedSettings = response.data;
         
         // 型安全な設定マージ
-        if (loadedSettings.downloadPath !== undefined) {
-          this.settings.downloadPath = loadedSettings.downloadPath;
-        }
-        if (loadedSettings.autoCloseModal !== undefined) {
-          this.settings.autoCloseModal = loadedSettings.autoCloseModal;
-        }
-        if (loadedSettings.showPreview !== undefined) {
-          this.settings.showPreview = loadedSettings.showPreview;
-        }
         if (loadedSettings.filenameFormat !== undefined) {
           this.settings.filenameFormat = loadedSettings.filenameFormat as FilenameFormat;
         }
