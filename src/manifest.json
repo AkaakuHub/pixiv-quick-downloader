@@ -11,16 +11,10 @@
     "declarativeNetRequestWithHostAccess",
     "offscreen"
   ],
-  "host_permissions": [
-    "https://www.pixiv.net/*",
-    "*://*.pximg.net/*"
-  ],
+  "host_permissions": ["https://www.pixiv.net/*", "*://*.pximg.net/*"],
   "content_scripts": [
     {
-      "matches": [
-        "https://www.pixiv.net/tags/*/artworks*",
-        "https://www.pixiv.net/search.php*"
-      ],
+      "matches": ["https://www.pixiv.net/tags/*/artworks*", "https://www.pixiv.net/search.php*"],
       "js": ["content.js"]
     }
   ],
@@ -37,11 +31,13 @@
     "128": "icons/icon128.png"
   },
   "declarative_net_request": {
-    "rule_resources": [{
-      "id": "ruleset_1",
-      "enabled": true,
-      "path": "rules.json"
-    }]
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
   },
   "web_accessible_resources": [
     {

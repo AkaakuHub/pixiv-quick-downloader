@@ -1,6 +1,6 @@
-import { ModalState, IllustInfo, ExtensionSettings, FilenameFormat } from '../types';
-import { PixivAPI } from './api';
-import '../styles/main.css';
+import { ModalState, ExtensionSettings, ExtendedWindow } from "../types";
+import { PixivAPI } from "./api";
+import "../styles/main.css";
 
 export class ModalManager {
   private modal: HTMLElement | null = null;
@@ -9,50 +9,53 @@ export class ModalManager {
     currentIllust: null,
     images: [],
     isLoading: false,
-    error: null
+    error: null,
   };
   private settings: ExtensionSettings = {
-    downloadPath: 'pixiv_downloads',
+    downloadPath: "pixiv_downloads",
     autoCloseModal: true,
     showPreview: true,
-    filenameFormat: 'title_page'
+    filenameFormat: "title_page",
   };
 
   constructor() {
     // Simple CSS handles all styling
     // 自身をグローバルに登録
-    (window as any).modalManager = this;
+    (window as ExtendedWindow).modalManager = this;
     this.loadSettings();
   }
 
   public async loadSettings() {
     try {
-      const response = await chrome.runtime.sendMessage({ type: 'GET_SETTINGS' });
+      const response = await chrome.runtime.sendMessage({ type: "GET_SETTINGS" });
       if (response.success && response.data) {
         this.settings = { ...this.settings, ...response.data };
       }
     } catch (error) {
-      console.error('Failed to load settings:', error);
+      console.error("Failed to load settings:", error);
     }
   }
 
   private sanitizeFilename(filename: string): string {
     // Windowsで使えない文字を置換
-    return filename
-      .replace(/</g, '＜')
-      .replace(/>/g, '＞')
-      .replace(/:/g, '：')
-      .replace(/"/g, '＂')
-      .replace(/\|/g, '｜')
-      .replace(/\?/g, '？')
-      .replace(/\*/g, '＊')
-      .replace(/\\/g, '￥')
-      .replace(/\//g, '／')       // / を ／ に置換
-      .replace(/[\x00-\x1F\x7F]/g, '') // 制御文字を削除
-      .replace(/[ ]+/g, ' ')      // 連続するスペースを1つに
-      .trim()                     // 先頭と末尾のスペースを削除
-      .replace(/^\./, '_')           // 先頭のドットを _ に置換
-      .replace(/[\/]+/g, '/');       // 連続するスラッシュを1つに
+    return (
+      filename
+        .replace(/</g, "＜")
+        .replace(/>/g, "＞")
+        .replace(/:/g, "：")
+        .replace(/"/g, "＂")
+        .replace(/\|/g, "｜")
+        .replace(/\?/g, "？")
+        .replace(/\*/g, "＊")
+        .replace(/\\/g, "￥")
+        .replace(/\//g, "／") // / を ／ に置換
+        // eslint-disable-next-line no-control-regex
+        .replace(/[\x00-\x1F\x7F]/g, "") // 制御文字を削除
+        .replace(/[ ]+/g, " ") // 連続するスペースを1つに
+        .trim() // 先頭と末尾のスペースを削除
+        .replace(/^\./, "_") // 先頭のドットを _ に置換
+        .replace(/[/]+/g, "/")
+    ); // 連続するスラッシュを1つに
   }
 
   private generateFilename(title: string, userName: string, id: string, pageIndex: number): string {
@@ -62,15 +65,15 @@ export class ModalManager {
     const encodedUserName = encodeURIComponent(sanitizedUserName);
 
     // windowsでも、スラッシュ区切りで問題ない
-    
+
     switch (this.settings.filenameFormat) {
-      case 'title_page':
+      case "title_page":
         return `${encodedTitle}_${pageIndex + 1}.png`;
-      case 'id_page':
+      case "id_page":
         return `${id}_${pageIndex + 1}.png`;
-      case 'author_title_page':
+      case "author_title_page":
         return `${encodedUserName}/${encodedTitle}_${pageIndex + 1}.png`;
-      case 'author_id_page':
+      case "author_id_page":
         return `${encodedUserName}/${id}_${pageIndex + 1}.png`;
       default:
         return `${encodedTitle}_${pageIndex + 1}.png`;
@@ -82,31 +85,30 @@ export class ModalManager {
     const sanitizedUserName = this.sanitizeFilename(userName);
     const encodedTitle = encodeURIComponent(sanitizedTitle);
     const encodedUserName = encodeURIComponent(sanitizedUserName);
-    
+
     switch (this.settings.filenameFormat) {
-      case 'title_page':
+      case "title_page":
         return encodedTitle;
-      case 'id_page':
+      case "id_page":
         return id;
-      case 'author_title_page':
+      case "author_title_page":
         return `${encodedUserName}/${encodedTitle}`;
-      case 'author_id_page':
+      case "author_id_page":
         return `${encodedUserName}/${id}`;
       default:
         return encodedTitle;
     }
   }
 
-  
   async openModal(illustId: string) {
     try {
       const api = PixivAPI.getInstance();
       this.state.isLoading = true;
       this.state.error = null;
-      
+
       const [images, illustInfo] = await Promise.all([
         api.getIllustPages(illustId),
-        api.getIllustInfo(illustId)
+        api.getIllustInfo(illustId),
       ]);
 
       this.state.currentIllust = illustInfo;
@@ -117,7 +119,7 @@ export class ModalManager {
       this.render();
     } catch (error) {
       this.state.isLoading = false;
-      this.state.error = error instanceof Error ? error.message : 'Unknown error';
+      this.state.error = error instanceof Error ? error.message : "Unknown error";
       this.render();
     }
   }
@@ -135,7 +137,7 @@ export class ModalManager {
       this.modal.remove();
     }
 
-    this.modal = document.createElement('div');
+    this.modal = document.createElement("div");
     this.modal.style.cssText = `
       position: fixed;
       top: 0;
@@ -152,16 +154,16 @@ export class ModalManager {
       transition: opacity 0.3s ease;
       padding: 20px;
     `;
-    
+
     if (this.state.isOpen) {
       // モーダルを開く前に確実にグローバルに登録
-      (window as any).modalManager = this;
+      (window as ExtendedWindow).modalManager = this;
       this.modal.innerHTML = this.getModalHTML();
       document.body.appendChild(this.modal);
-      
+
       setTimeout(() => {
         if (this.modal) {
-          this.modal.style.opacity = '1';
+          this.modal.style.opacity = "1";
         }
       }, 10);
 
@@ -193,9 +195,10 @@ export class ModalManager {
       `;
     }
 
-    const imageItems = this.state.images.map((url, index) => {
-      // ダウンロード対象の画像をそのまま表示
-      return `
+    const imageItems = this.state.images
+      .map((url, index) => {
+        // ダウンロード対象の画像をそのまま表示
+        return `
       <div class="pixiv-image-card">
         <div class="pixiv-image-wrapper" data-url="${url}" data-index="${index}">
           <img 
@@ -212,7 +215,8 @@ export class ModalManager {
         </div>
       </div>
     `;
-    }).join('');
+      })
+      .join("");
 
     return `
       <div class="pixiv-modal-container">
@@ -224,13 +228,17 @@ export class ModalManager {
           <button class="pixiv-close-btn">✕</button>
         </div>
         
-        ${this.state.images.length > 1 ? `
+        ${
+          this.state.images.length > 1
+            ? `
           <div class="pixiv-bulk-download">
             <button class="pixiv-download-all-btn">
               全てダウンロード (${this.state.images.length}枚)
             </button>
           </div>
-        ` : ''}
+        `
+            : ""
+        }
         
         <div class="pixiv-images-grid">
           ${imageItems}
@@ -242,31 +250,31 @@ export class ModalManager {
   private attachEventListeners() {
     if (!this.modal) return;
 
-    this.modal.addEventListener('click', (e) => {
+    this.modal.addEventListener("click", e => {
       if (e.target === this.modal) {
         this.closeModal();
       }
     });
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.state.isOpen) {
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && this.state.isOpen) {
         this.closeModal();
       }
     });
 
     // 画像クリックイベントリスナーを追加
-    const imageWrappers = this.modal.querySelectorAll('.pixiv-image-wrapper');
+    const imageWrappers = this.modal.querySelectorAll(".pixiv-image-wrapper");
     imageWrappers.forEach((wrapper, index) => {
-      const url = wrapper.getAttribute('data-url');
-      
+      const url = wrapper.getAttribute("data-url");
+
       if (url) {
-        wrapper.addEventListener('click', (e) => {
+        wrapper.addEventListener("click", e => {
           e.preventDefault();
           e.stopPropagation();
           const filename = this.generateFilename(
-            this.state.currentIllust?.title || 'untitled',
-            this.state.currentIllust?.userName || 'Unknown User',
-            this.state.currentIllust?.id || 'unknown',
+            this.state.currentIllust?.title || "untitled",
+            this.state.currentIllust?.userName || "Unknown User",
+            this.state.currentIllust?.id || "unknown",
             index
           );
           this.downloadImage(url, filename, this.state.currentIllust?.id);
@@ -275,9 +283,9 @@ export class ModalManager {
     });
 
     // 閉じるボタンのイベントリスナー
-    const closeButtons = this.modal.querySelectorAll('.pixiv-close-btn');
+    const closeButtons = this.modal.querySelectorAll(".pixiv-close-btn");
     closeButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
+      button.addEventListener("click", e => {
         e.preventDefault();
         e.stopPropagation();
         this.closeModal();
@@ -285,9 +293,9 @@ export class ModalManager {
     });
 
     // 全てダウンロードボタンのイベントリスナー
-    const downloadAllButtons = this.modal.querySelectorAll('.pixiv-download-all-btn');
+    const downloadAllButtons = this.modal.querySelectorAll(".pixiv-download-all-btn");
     downloadAllButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
+      button.addEventListener("click", e => {
         e.preventDefault();
         e.stopPropagation();
         this.downloadAllImages();
@@ -295,42 +303,40 @@ export class ModalManager {
     });
   }
 
-  
-  
   async downloadImage(url: string, filename: string, illustId?: string) {
     try {
       // background script経由でダウンロード
       const response = await chrome.runtime.sendMessage({
-        type: 'DOWNLOAD_IMAGE',
+        type: "DOWNLOAD_IMAGE",
         payload: {
           url: url,
           filename: filename,
-          illustId: illustId
-        }
+          illustId: illustId,
+        },
       });
-      
+
       if (!response.success) {
-        throw new Error(response.error || 'Unknown error');
+        throw new Error(response.error || "Unknown error");
       }
-    } catch (error) {
-      alert('ダウンロードに失敗しました');
+    } catch {
+      alert("ダウンロードに失敗しました");
     }
   }
 
   async downloadAllImages() {
     if (!this.state.currentIllust || !this.state.images.length) return;
-    
+
     const folderName = this.generateFolderName(
-      this.state.currentIllust?.title || 'untitled',
-      this.state.currentIllust?.userName || 'Unknown User',
-      this.state.currentIllust?.id || 'unknown'
+      this.state.currentIllust?.title || "untitled",
+      this.state.currentIllust?.userName || "Unknown User",
+      this.state.currentIllust?.id || "unknown"
     );
-    
+
     for (let i = 0; i < this.state.images.length; i++) {
       const url = this.state.images[i];
       const filename = `${folderName}/${i + 1}.png`;
       await this.downloadImage(url, filename, this.state.currentIllust?.id);
-      
+
       // レートリミット対策
       await new Promise(resolve => setTimeout(resolve, 500));
     }

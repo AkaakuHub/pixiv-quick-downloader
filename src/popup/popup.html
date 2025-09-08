@@ -1,161 +1,161 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>Pixiv Quick Downloader</title>
-  <style>
-    body {
-      width: 300px;
-      min-height: 200px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 0;
-      padding: 16px;
-      background: #1a1a1a;
-      color: #fff;
-    }
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid #333;
-    }
-    .title {
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0;
-      color: #0096fa;
-    }
-    .version {
-      font-size: 12px;
-      color: #999;
-      margin-top: 4px;
-    }
-    .section {
-      margin-bottom: 20px;
-    }
-    .section-title {
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #fff;
-    }
-    .setting-item {
-      margin-bottom: 12px;
-    }
-    .setting-label {
-      font-size: 12px;
-      color: #ccc;
-      margin-bottom: 4px;
-      display: block;
-    }
-    .setting-input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #333;
-      border-radius: 4px;
-      background: #2a2a2a;
-      color: #fff;
-      font-size: 12px;
-      box-sizing: border-box;
-    }
-    .setting-input:focus {
-      outline: none;
-      border-color: #0096fa;
-    }
-    .checkbox-container {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .checkbox {
-      width: 16px;
-      height: 16px;
-      accent-color: #0096fa;
-    }
-    .btn {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-primary {
-      background: #0096fa;
-      color: white;
-    }
-    .btn-primary:hover {
-      background: #0078cc;
-    }
-    .btn-secondary {
-      background: #333;
-      color: #fff;
-    }
-    .btn-secondary:hover {
-      background: #444;
-    }
-    .status {
-      text-align: center;
-      padding: 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      margin-top: 16px;
-      display: none;
-    }
-    .status.success {
-      background: rgba(40, 167, 69, 0.2);
-      color: #28a745;
-      border: 1px solid #28a745;
-    }
-    .status.error {
-      background: rgba(220, 53, 69, 0.2);
-      color: #dc3545;
-      border: 1px solid #dc3545;
-    }
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid #333;
-      font-size: 11px;
-      color: #666;
-    }
-    .link {
-      color: #0096fa;
-      text-decoration: none;
-    }
-    .link:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1 class="title">Pixiv Quick Downloader</h1>
-    <div class="version">v1.0.0</div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">設定</div>
-    <div class="setting-item">
-      <label class="setting-label">ファイル名形式</label>
-      <select id="filenameFormat" class="setting-input">
-        <option value="title_page">作品名_ページ</option>
-        <option value="id_page">作品ID_ページ</option>
-        <option value="author_title_page">作者名/作品名_ページ</option>
-        <option value="author_id_page">作者名/作品ID_ページ</option>
-      </select>
+  <head>
+    <meta charset="utf-8" />
+    <title>Pixiv Quick Downloader</title>
+    <style>
+      body {
+        width: 300px;
+        min-height: 200px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 16px;
+        background: #1a1a1a;
+        color: #fff;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #333;
+      }
+      .title {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 0;
+        color: #0096fa;
+      }
+      .version {
+        font-size: 12px;
+        color: #999;
+        margin-top: 4px;
+      }
+      .section {
+        margin-bottom: 20px;
+      }
+      .section-title {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #fff;
+      }
+      .setting-item {
+        margin-bottom: 12px;
+      }
+      .setting-label {
+        font-size: 12px;
+        color: #ccc;
+        margin-bottom: 4px;
+        display: block;
+      }
+      .setting-input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #333;
+        border-radius: 4px;
+        background: #2a2a2a;
+        color: #fff;
+        font-size: 12px;
+        box-sizing: border-box;
+      }
+      .setting-input:focus {
+        outline: none;
+        border-color: #0096fa;
+      }
+      .checkbox-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .checkbox {
+        width: 16px;
+        height: 16px;
+        accent-color: #0096fa;
+      }
+      .btn {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: #0096fa;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #0078cc;
+      }
+      .btn-secondary {
+        background: #333;
+        color: #fff;
+      }
+      .btn-secondary:hover {
+        background: #444;
+      }
+      .status {
+        text-align: center;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        margin-top: 16px;
+        display: none;
+      }
+      .status.success {
+        background: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+        border: 1px solid #28a745;
+      }
+      .status.error {
+        background: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+        border: 1px solid #dc3545;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid #333;
+        font-size: 11px;
+        color: #666;
+      }
+      .link {
+        color: #0096fa;
+        text-decoration: none;
+      }
+      .link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1 class="title">Pixiv Quick Downloader</h1>
+      <div class="version">v1.0.0</div>
     </div>
-  </div>
 
-  <div id="status" class="status"></div>
+    <div class="section">
+      <div class="section-title">設定</div>
+      <div class="setting-item">
+        <label class="setting-label">ファイル名形式</label>
+        <select id="filenameFormat" class="setting-input">
+          <option value="title_page">作品名_ページ</option>
+          <option value="id_page">作品ID_ページ</option>
+          <option value="author_title_page">作者名/作品名_ページ</option>
+          <option value="author_id_page">作者名/作品ID_ページ</option>
+        </select>
+      </div>
+    </div>
 
-  <div class="footer">
-    <div>© 2025 Pixiv Quick Downloader</div>
-  </div>
+    <div id="status" class="status"></div>
 
-  <script src="popup.js"></script>
-</body>
+    <div class="footer">
+      <div>© 2025 Pixiv Quick Downloader</div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
 </html>
