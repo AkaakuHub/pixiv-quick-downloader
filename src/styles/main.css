@@ -142,6 +142,26 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 }
 
+/* Instruction Text */
+.pixiv-instruction {
+  text-align: center !important;
+  color: var(--text-secondary) !important;
+  margin-bottom: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.pixiv-instruction-text{
+  font-size: 14px !important;
+}
+
+.pixiv-instruct
+ion-subtext{
+  font-size: 12px !important;
+}
+
 /* Bulk Download Section */
 .pixiv-bulk-download {
   margin-bottom: 24px !important;

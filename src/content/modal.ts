@@ -285,7 +285,14 @@ export class ModalManager {
           </div>
           <button class="pixiv-close-btn">✕</button>
         </div>
-        
+        <div class="pixiv-instruction">
+          <div class="pixiv-instruction-text">
+          画像をクリックしてダウンロード
+          </div>
+          <div class="pixiv-instruction-subtext">
+          または
+          </div>
+        </div>
         ${
           this.state.images.length > 1
             ? `
