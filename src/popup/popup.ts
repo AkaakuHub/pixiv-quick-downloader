@@ -21,10 +21,6 @@ class PopupManager {
   }
 
   private setupEventListeners() {
-    document.getElementById('openHelp')?.addEventListener('click', () => {
-      this.openHelp();
-    });
-
     // 設定変更時のリアルタイム更新と自動保存
     document.getElementById('downloadPath')?.addEventListener('input', async (e) => {
       this.settings.downloadPath = (e.target as HTMLInputElement).value;
@@ -136,11 +132,6 @@ class PopupManager {
     setTimeout(() => {
       statusElement.classList.add('hidden');
     }, 3000);
-  }
-
-  private openHelp() {
-    const helpUrl = 'https://github.com/your-repo/pixiv-downloader#readme';
-    chrome.tabs.create({ url: helpUrl });
   }
 }
 
