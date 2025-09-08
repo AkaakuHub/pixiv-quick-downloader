@@ -37,17 +37,14 @@ export class PixivAPI {
 
   async getIllustInfo(illustId: string): Promise<IllustInfo> {
     try {
-      // カードを検索 - data-gtm-value属性を使用
-      const cardSelector = ".sc-57c4d86c-5.gTqtlQ, .sc-57c4d86c-5.gTqsCV";
-      const cards = Array.from(document.querySelectorAll(cardSelector)) as HTMLElement[];
+      // カードを検索 - data-gtm-value属性から安定した方法で取得
+      const targetLink = document.querySelector(`a[data-gtm-value="${illustId}"]`) as HTMLElement;
 
       let targetCard: HTMLElement | null = null;
-      for (const card of cards) {
-        const link = card.querySelector(`a[data-gtm-value="${illustId}"]`);
-        if (link) {
-          targetCard = card;
-          break;
-        }
+      if (targetLink) {
+        // 親要素をたどってカードコンテナを探す
+        // data-gtm-valueを持つa要素から、さらに親要素をたどってトップ階層のカードを取得
+        targetCard = targetLink.closest("div")?.closest("div")?.closest("div") as HTMLElement;
       }
 
       if (!targetCard) {
