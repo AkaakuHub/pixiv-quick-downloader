@@ -9,8 +9,7 @@ export default {
   entry: {
     content: './src/content/content.ts',
     background: './src/background/background.ts',
-    popup: './src/popup/popup.ts',
-    offscreen: './src/offscreen.ts'
+    popup: './src/popup/popup.ts'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -39,8 +38,7 @@ export default {
         { from: 'src/manifest.json', to: 'manifest.json' },
         { from: 'src/popup/popup.html', to: 'popup.html' },
         { from: 'src/icons', to: 'icons' },
-        { from: 'src/rules.json', to: 'rules.json' },
-        { from: 'src/offscreen.html', to: 'offscreen.html' }
+        { from: 'src/rules.json', to: 'rules.json' }
       ]
     })
   ]

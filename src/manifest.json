@@ -3,14 +3,7 @@
   "name": "Pixiv Quick Downloader",
   "version": "1.0.0",
   "description": "Download pixiv images easily from search results",
-  "permissions": [
-    "downloads",
-    "storage",
-    "activeTab",
-    "tabs",
-    "declarativeNetRequestWithHostAccess",
-    "offscreen"
-  ],
+  "permissions": ["downloads", "storage", "tabs", "declarativeNetRequestWithHostAccess"],
   "host_permissions": ["https://www.pixiv.net/*", "*://*.pximg.net/*"],
   "content_scripts": [
     {
