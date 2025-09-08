@@ -38,6 +38,7 @@ export default {
         { from: 'src/manifest.json', to: 'manifest.json' },
         { from: 'src/popup/popup.html', to: 'popup.html' },
         { from: 'src/icons', to: 'icons' },
+        { from: 'src/rules.json', to: 'rules.json' }
       ]
     })
   ]
