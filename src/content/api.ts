@@ -42,12 +42,12 @@ export class PixivAPI {
 
       let targetCard: HTMLElement | null = null;
       if (targetLink) {
-        // 親要素をたどってカードコンテナを探す
-        // data-gtm-valueを持つa要素から、さらに親要素をたどってトップ階層のカードを取得
-        targetCard = targetLink.closest("div")?.closest("div")?.closest("div") as HTMLElement;
+        targetCard = targetLink?.parentElement?.parentElement?.parentElement as HTMLElement;
+        console.log("Found target card via data-gtm-value:", targetCard);
       }
 
       if (!targetCard) {
+        console.warn(`Could not find card element for illustId: ${illustId}`);
         return {
           id: illustId,
           title: `作品 ${illustId}`,
