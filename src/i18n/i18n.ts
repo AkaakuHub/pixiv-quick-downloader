@@ -25,21 +25,27 @@ export class I18n {
   private mapLanguageCode(browserLang: string): string {
     const lang = browserLang.toLowerCase();
 
-    // Direct mapping for supported languages
-    const supportedLanguages = ["en", "ja", "zh", "zh-cn", "zh-tw", "ko"];
-
-    if (supportedLanguages.includes(lang)) {
-      return lang;
+    // Handle English variants (en-US, en-GB, etc.)
+    if (lang.startsWith("en-")) {
+      return "en";
     }
 
-    // Handle zh-CN and zh-TW specifically
+    // Handle Chinese variants
     if (lang.startsWith("zh-")) {
       if (lang.includes("cn") || lang.includes("sg")) {
-        return "zh-cn";
-      } else if (lang.includes("tw") || lang.includes("hk")) {
-        return "zh-tw";
+        return "zh-CN";
+      } else if (lang.includes("tw")) {
+        return "zh-TW";
+      } else if (lang.includes("hk")) {
+        return "zh-HK";
       }
       return "zh";
+    }
+
+    const supportedLanguages = ["en", "ja", "zh", "zh-CN", "zh-TW", "zh-HK", "ko"];
+
+    if (supportedLanguages.includes(lang) || supportedLanguages.includes(browserLang)) {
+      return supportedLanguages.find(supported => supported.toLowerCase() === lang) || browserLang;
     }
 
     // Fallback to English

@@ -12,6 +12,7 @@ export const translations: Translations = {
     zh: "加载中...",
     "zh-CN": "加载中...",
     "zh-TW": "載入中...",
+    "zh-HK": "載入中...",
     ko: "로딩 중...",
   },
   error: {
@@ -20,6 +21,7 @@ export const translations: Translations = {
     zh: "错误：{error}",
     "zh-CN": "错误：{error}",
     "zh-TW": "錯誤：{error}",
+    "zh-HK": "錯誤：{error}",
     ko: "오류: {error}",
   },
   close: {
@@ -28,6 +30,7 @@ export const translations: Translations = {
     zh: "关闭",
     "zh-CN": "关闭",
     "zh-TW": "關閉",
+    "zh-HK": "關閉",
     ko: "닫기",
   },
   imageLoadError: {
@@ -36,6 +39,7 @@ export const translations: Translations = {
     zh: "图片加载失败",
     "zh-CN": "图片加载失败",
     "zh-TW": "圖片載入失敗",
+    "zh-HK": "圖片載入失敗",
     ko: "이미지를 불러오는 데 실패했습니다",
   },
   page: {
@@ -44,6 +48,7 @@ export const translations: Translations = {
     zh: "第 {current} 页 / 共 {total} 页",
     "zh-CN": "第 {current} 页 / 共 {total} 页",
     "zh-TW": "第 {current} 頁 / 共 {total} 頁",
+    "zh-HK": "第 {current} 頁 / 共 {total} 頁",
     ko: "페이지 {current} / {total}",
   },
   filenamePlaceholder: {
@@ -52,6 +57,7 @@ export const translations: Translations = {
     zh: "输入文件名 (例如: folder/name)",
     "zh-CN": "输入文件名 (例如: folder/name)",
     "zh-TW": "輸入檔案名 (例如: folder/name)",
+    "zh-HK": "輸入檔案名 (例如: folder/name)",
     ko: "파일명 입력 (예: folder/name)",
   },
   clickToDownload: {
@@ -60,6 +66,7 @@ export const translations: Translations = {
     zh: "点击图片下载",
     "zh-CN": "点击图片下载",
     "zh-TW": "點擊圖片下載",
+    "zh-HK": "點擊圖片下載",
     ko: "이미지를 클릭하여 다운로드",
   },
   or: {
@@ -68,6 +75,7 @@ export const translations: Translations = {
     zh: "或",
     "zh-CN": "或",
     "zh-TW": "或",
+    "zh-HK": "或",
     ko: "또는",
   },
   downloadAll: {
@@ -76,6 +84,7 @@ export const translations: Translations = {
     zh: "下载全部 ({count} 张)",
     "zh-CN": "下载全部 ({count} 张)",
     "zh-TW": "下載全部 ({count} 張)",
+    "zh-HK": "下載全部 ({count} 張)",
     ko: "전체 다운로드 ({count}장)",
   },
   downloadFailed: {
@@ -84,6 +93,7 @@ export const translations: Translations = {
     zh: "下载失败",
     "zh-CN": "下载失败",
     "zh-TW": "下載失敗",
+    "zh-HK": "下載失敗",
     ko: "다운로드에 실패했습니다",
   },
 
@@ -94,6 +104,7 @@ export const translations: Translations = {
     zh: "设置",
     "zh-CN": "设置",
     "zh-TW": "設定",
+    "zh-HK": "設定",
     ko: "설정",
   },
   filenameFormat: {
@@ -101,7 +112,8 @@ export const translations: Translations = {
     ja: "ファイル名の形式",
     zh: "文件名格式",
     "zh-CN": "文件名格式",
-    "zh-TW": "檔案名格式",
+    "zh-TW": "檔案名稱格式",
+    "zh-HK": "檔案名稱格式",
     ko: "파일명 형식",
   },
   formatTitlePage: {
@@ -110,6 +122,7 @@ export const translations: Translations = {
     zh: "标题_页码",
     "zh-CN": "标题_页码",
     "zh-TW": "標題_頁碼",
+    "zh-HK": "標題_頁碼",
     ko: "제목_페이지 번호",
   },
   formatIdPage: {
@@ -118,6 +131,7 @@ export const translations: Translations = {
     zh: "作品ID_页码",
     "zh-CN": "作品ID_页码",
     "zh-TW": "作品ID_頁碼",
+    "zh-HK": "作品ID_頁碼",
     ko: "작품ID_페이지 번호",
   },
   formatAuthorTitlePage: {
@@ -126,6 +140,7 @@ export const translations: Translations = {
     zh: "作者/标题_页码",
     "zh-CN": "作者/标题_页码",
     "zh-TW": "作者/標題_頁碼",
+    "zh-HK": "作者/標題_頁碼",
     ko: "작가/제목_페이지 번호",
   },
   formatAuthorIdPage: {
@@ -134,6 +149,7 @@ export const translations: Translations = {
     zh: "作者/作品ID_页码",
     "zh-CN": "作者/作品ID_页码",
     "zh-TW": "作者/作品ID_頁碼",
+    "zh-HK": "作者/作品ID_頁碼",
     ko: "작가/작품ID_페이지 번호",
   },
   settingsSaved: {
@@ -142,6 +158,7 @@ export const translations: Translations = {
     zh: "设置已保存",
     "zh-CN": "设置已保存",
     "zh-TW": "設定已儲存",
+    "zh-HK": "設定已儲存",
     ko: "설정이 저장되었습니다",
   },
   settingsSaveFailed: {
@@ -150,6 +167,7 @@ export const translations: Translations = {
     zh: "保存设置失败",
     "zh-CN": "保存设置失败",
     "zh-TW": "儲存設定失敗",
+    "zh-HK": "儲存設定失敗",
     ko: "설정 저장에 실패했습니다",
   },
 };
