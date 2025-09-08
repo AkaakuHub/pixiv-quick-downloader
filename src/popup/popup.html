@@ -138,14 +138,16 @@
     </div>
 
     <div class="section">
-      <div class="section-title">設定</div>
+      <div class="section-title" id="sectionTitle">Settings</div>
       <div class="setting-item">
-        <label class="setting-label">ファイル名形式</label>
+        <label for="filenameFormat" class="setting-label" id="filenameFormatLabel"
+          >Filename Format</label
+        >
         <select id="filenameFormat" class="setting-input">
-          <option value="title_page">作品名_ページ</option>
-          <option value="id_page">作品ID_ページ</option>
-          <option value="author_title_page">作者名/作品名_ページ</option>
-          <option value="author_id_page">作者名/作品ID_ページ</option>
+          <option value="title_page" id="optionTitlePage"></option>
+          <option value="id_page" id="optionIdPage"></option>
+          <option value="author_title_page" id="optionAuthorTitlePage"></option>
+          <option value="author_id_page" id="optionAuthorIdPage"></option>
         </select>
       </div>
     </div>

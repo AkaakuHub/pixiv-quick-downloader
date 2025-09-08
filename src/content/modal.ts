@@ -1,5 +1,6 @@
 import { ModalState, ExtensionSettings, ExtendedWindow } from "../types";
 import { PixivAPI } from "./api";
+import { I18n } from "../i18n";
 import "../styles/main.css";
 
 export class ModalManager {
@@ -17,10 +18,12 @@ export class ModalManager {
     showPreview: true,
     filenameFormat: "title_page",
   };
+  private i18n: I18n;
 
   constructor() {
     // Simple CSS handles all styling
     // 自身をグローバルに登録
+    this.i18n = I18n.getInstance();
     (window as ExtendedWindow).modalManager = this;
     this.loadSettings();
   }
@@ -221,7 +224,7 @@ export class ModalManager {
         <div class="pixiv-modal-container">
           <div class="pixiv-modal-loading">
             <div class="pixiv-loading-spinner"></div>
-            <div>読み込み中...</div>
+            <div>${this.i18n.t("loading")}</div>
           </div>
         </div>
       `;
@@ -232,8 +235,8 @@ export class ModalManager {
         <div class="pixiv-modal-container">
           <div class="pixiv-modal-error">
             <div class="pixiv-error-icon">⚠️</div>
-            <div class="pixiv-error-message">エラー: ${this.state.error}</div>
-            <button class="pixiv-close-btn">閉じる</button>
+            <div class="pixiv-error-message">${this.i18n.t("error", { error: this.state.error })}</div>
+            <button class="pixiv-close-btn">${this.i18n.t("close")}</button>
           </div>
         </div>
       `;
@@ -255,17 +258,17 @@ export class ModalManager {
             src="${url}" 
             alt="Page ${index + 1}"
             class="pixiv-thumbnail"
-            onerror="this.parentElement.innerHTML='<div class=\\'pixiv-image-error\\'>画像の読み込みに失敗しました</div>'"
+            onerror="this.parentElement.innerHTML='<div class=\\'pixiv-image-error\\'>${this.i18n.t("imageLoadError")}</div>'"
           >
           <div class="pixiv-download-overlay">
           </div>
         </div>
         <div class="pixiv-image-info">
-          <div class="pixiv-page-number">ページ ${index + 1} / ${this.state.images.length}</div>
+          <div class="pixiv-page-number">${this.i18n.t("page", { current: String(index + 1), total: String(this.state.images.length) })}</div>
           <input 
             type="text" 
             class="pixiv-filename-input" 
-            placeholder="ファイル名を入力 (例: folder/name)"
+            placeholder="${this.i18n.t("filenamePlaceholder")}"
             data-default-filename="${defaultFilename}"
             data-index="${index}"
             value=""
@@ -287,10 +290,10 @@ export class ModalManager {
         </div>
         <div class="pixiv-instruction">
           <div class="pixiv-instruction-text">
-          画像をクリックしてダウンロード
+          ${this.i18n.t("clickToDownload")}
           </div>
           <div class="pixiv-instruction-subtext">
-          または
+          ${this.i18n.t("or")}
           </div>
         </div>
         ${
@@ -298,7 +301,7 @@ export class ModalManager {
             ? `
           <div class="pixiv-bulk-download">
             <button class="pixiv-download-all-btn">
-              全てダウンロード (${this.state.images.length}枚)
+              ${this.i18n.t("downloadAll", { count: String(this.state.images.length) })}
             </button>
           </div>
         `
@@ -404,7 +407,7 @@ export class ModalManager {
         throw new Error(response.error || "Unknown error");
       }
     } catch {
-      alert("ダウンロードに失敗しました");
+      alert(this.i18n.t("downloadFailed"));
     }
   }
 

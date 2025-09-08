@@ -19,6 +19,7 @@ export default [
         console: 'readonly',
         document: 'readonly',
         window: 'readonly',
+        navigator: 'readonly',
         fetch: 'readonly',
         FileReader: 'readonly',
         Blob: 'readonly',

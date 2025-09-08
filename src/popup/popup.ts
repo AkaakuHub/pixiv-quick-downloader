@@ -1,8 +1,10 @@
 import { ExtensionSettings, FilenameFormat } from "../types";
+import { I18n } from "../i18n";
 import "../styles/main.css";
 
 class PopupManager {
   private settings: ExtensionSettings;
+  private i18n: I18n;
 
   constructor() {
     this.settings = {
@@ -11,6 +13,7 @@ class PopupManager {
       showPreview: true,
       filenameFormat: "title_page",
     };
+    this.i18n = I18n.getInstance();
     this.init();
   }
 
@@ -18,6 +21,7 @@ class PopupManager {
     await this.loadSettings();
     this.setupEventListeners();
     this.updateUI();
+    this.updateUIText();
   }
 
   private setupEventListeners() {
@@ -32,6 +36,39 @@ class PopupManager {
     const filenameFormatSelect = document.getElementById("filenameFormat") as HTMLSelectElement;
 
     if (filenameFormatSelect) filenameFormatSelect.value = this.settings.filenameFormat;
+  }
+
+  private updateUIText() {
+    // Update section titles
+    const sectionTitle = document.getElementById("sectionTitle");
+    if (sectionTitle) {
+      sectionTitle.textContent = this.i18n.t("settings");
+    }
+
+    // Update setting labels
+    const filenameFormatLabel = document.getElementById("filenameFormatLabel");
+    if (filenameFormatLabel) {
+      filenameFormatLabel.textContent = this.i18n.t("filenameFormat");
+    }
+
+    // Update select options
+    const optionTitlePage = document.getElementById("optionTitlePage");
+    const optionIdPage = document.getElementById("optionIdPage");
+    const optionAuthorTitlePage = document.getElementById("optionAuthorTitlePage");
+    const optionAuthorIdPage = document.getElementById("optionAuthorIdPage");
+
+    if (optionTitlePage) {
+      optionTitlePage.textContent = this.i18n.t("formatTitlePage");
+    }
+    if (optionIdPage) {
+      optionIdPage.textContent = this.i18n.t("formatIdPage");
+    }
+    if (optionAuthorTitlePage) {
+      optionAuthorTitlePage.textContent = this.i18n.t("formatAuthorTitlePage");
+    }
+    if (optionAuthorIdPage) {
+      optionAuthorIdPage.textContent = this.i18n.t("formatAuthorIdPage");
+    }
   }
 
   public async loadSettings() {
@@ -61,16 +98,16 @@ class PopupManager {
       });
 
       if (response.success) {
-        this.showStatus("設定を保存しました", "success");
+        this.showStatus(this.i18n.t("settingsSaved"), "success");
 
         // モーダルが開いている場合に設定を再読み込みさせるためのイベントを発火
         this.notifySettingsChanged();
       } else {
-        this.showStatus("設定の保存に失敗しました", "error");
+        this.showStatus(this.i18n.t("settingsSaveFailed"), "error");
       }
     } catch (error) {
       console.error("Failed to save settings:", error);
-      this.showStatus("設定の保存に失敗しました", "error");
+      this.showStatus(this.i18n.t("settingsSaveFailed"), "error");
     }
   }
 
