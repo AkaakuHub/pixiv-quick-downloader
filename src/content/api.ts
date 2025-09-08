@@ -43,7 +43,6 @@ export class PixivAPI {
       let targetCard: HTMLElement | null = null;
       if (targetLink) {
         targetCard = targetLink?.parentElement?.parentElement?.parentElement as HTMLElement;
-        console.log("Found target card via data-gtm-value:", targetCard);
       }
 
       if (!targetCard) {
