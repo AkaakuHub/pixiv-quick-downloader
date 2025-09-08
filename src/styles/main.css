@@ -139,7 +139,7 @@
 /* Images Grid */
 .pixiv-images-grid {
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)) !important;
   gap: 24px !important;
   justify-items: center !important;
 }
@@ -322,7 +322,7 @@
   }
   
   .pixiv-images-grid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
     gap: 16px !important;
   }
   
@@ -350,14 +350,14 @@
 
 @media (min-width: 1200px) {
   .pixiv-images-grid {
-    grid-template-columns: repeat(auto-fit, minmax(550px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)) !important;
     gap: 28px !important;
   }
 }
 
 @media (min-width: 1600px) {
   .pixiv-images-grid {
-    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)) !important;
     gap: 32px !important;
   }
 }
