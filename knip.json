@@ -1,0 +1,5 @@
+{
+  "entry": ["src/manifest.json"],
+  "project": ["src/**/*.ts*"],
+  "ignore": ["**/node_modules/**", "**/dist/**", "**/build/**"]
+}

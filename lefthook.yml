@@ -12,3 +12,6 @@ pre-commit:
     - name: format check
       run: pnpm format:check
       glob: "*.{ts,tsx,html,json}"
+
+    - name: knip check
+      run: pnpm knip

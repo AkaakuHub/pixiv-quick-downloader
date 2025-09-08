@@ -10,12 +10,6 @@ export interface PixivPage {
   height: number;
 }
 
-export interface PixivIllustResponse {
-  body: PixivPage[];
-  error: boolean;
-  message: string;
-}
-
 // Illust Information
 export interface IllustInfo {
   id: string;
@@ -41,49 +35,9 @@ export interface ExtensionSettings {
   filenameFormat: FilenameFormat;
 }
 
-// Download Item
-export interface DownloadItem {
-  url: string;
-  filename: string;
-  illustId: string;
-  pageIndex: number;
-}
-
-// Chrome Extension Types
-export interface DownloadImagePayload {
-  url: string;
-  filename: string;
-  illustId?: string;
-}
-
-export interface UpdateSettingsPayload {
-  filenameFormat?: FilenameFormat;
-}
-
 export interface FetchImagePayload {
   url: string;
   referer: string;
-}
-
-export interface ChromeMessage {
-  type:
-    | "DOWNLOAD_IMAGE"
-    | "OPEN_MODAL"
-    | "CLOSE_MODAL"
-    | "GET_SETTINGS"
-    | "UPDATE_SETTINGS"
-    | "FETCH_IMAGE";
-  payload?:
-    | DownloadImagePayload
-    | UpdateSettingsPayload
-    | FetchImagePayload
-    | Partial<ExtensionSettings>;
-}
-
-export interface ChromeDownloadOptions {
-  url: string;
-  filename: string;
-  saveAs: boolean;
 }
 
 export interface ExtendedWindow extends globalThis.Window {
