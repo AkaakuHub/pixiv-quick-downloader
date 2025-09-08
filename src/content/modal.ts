@@ -196,7 +196,7 @@ export class ModalManager {
       justify-content: center;
       opacity: 0;
       transition: opacity 0.3s ease;
-      padding: 20px;
+      padding: 0;
     `;
 
     if (this.state.isOpen) {

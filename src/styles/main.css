@@ -35,7 +35,8 @@
   border-radius: 20px !important;
   padding: 32px !important;
   max-width: 1400px !important;
-  width: 100% !important;
+  width: 90vw !important;
+  height: 90vh !important;
   max-height: 95vh !important;
   overflow-y: auto !important;
   position: relative !important;
@@ -138,7 +139,7 @@
 /* Images Grid */
 .pixiv-images-grid {
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)) !important;
   gap: 24px !important;
   justify-items: center !important;
 }
@@ -148,37 +149,36 @@
   background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%) !important;
   border-radius: 16px !important;
   overflow: hidden !important;
-  transition: all 0.4s ease !important;
+  transition: border-color 0.3s ease !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
-  max-width: 320px !important;
+  width: 100% !important;
+  max-width: none !important;
+  isolation: isolate !important;
 }
 
 .pixiv-image-card:hover {
-  transform: translateY(-6px) !important;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6) !important;
   border-color: rgba(0, 150, 250, 0.4) !important;
 }
 
 .pixiv-image-wrapper {
   position: relative !important;
   width: 100% !important;
-  height: 200px !important;
+  padding-top: 56.25% !important;
   overflow: hidden !important;
   cursor: pointer !important;
   background: #1a1a1a !important;
 }
 
 .pixiv-thumbnail {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover !important;
-  transition: transform 0.3s ease !important;
+  object-fit: contain !important;
 }
 
-.pixiv-image-card:hover .pixiv-thumbnail {
-  transform: scale(1.05) !important;
-}
 
 .pixiv-image-info {
   padding: 16px !important;
@@ -232,10 +232,10 @@
   align-items: center !important;
   justify-content: center !important;
   opacity: 0 !important;
-  transition: all 0.4s ease !important;
+  transition: opacity 0.3s ease !important;
   cursor: pointer !important;
-  backdrop-filter: blur(4px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  border-radius: 0 !important;
 }
 
 .pixiv-image-wrapper:hover .pixiv-download-overlay {
@@ -298,7 +298,11 @@
   padding: 40px 20px !important;
   font-size: 14px !important;
   background: #1a1a1a !important;
-  height: 200px !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -314,12 +318,12 @@
 @media (max-width: 768px) {
   .pixiv-modal-container {
     padding: 16px !important;
-    margin: 8px !important;
+    width: 95vw !important;
   }
   
   .pixiv-images-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
-    gap: 12px !important;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+    gap: 16px !important;
   }
   
   .pixiv-image-wrapper {
@@ -346,14 +350,14 @@
 
 @media (min-width: 1200px) {
   .pixiv-images-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fit, minmax(550px, 1fr)) !important;
     gap: 28px !important;
   }
 }
 
 @media (min-width: 1600px) {
   .pixiv-images-grid {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)) !important;
     gap: 32px !important;
   }
 }
@@ -361,6 +365,7 @@
 @media (max-width: 480px) {
   .pixiv-modal-container {
     padding: 12px !important;
+    width: 98vw !important;
   }
   
   .pixiv-images-grid {
