@@ -33,11 +33,15 @@ export interface ModalState {
   error: string | null;
 }
 
+// Filename format options
+export type FilenameFormat = 'title_page' | 'id_page' | 'author_title_page' | 'author_id_page';
+
 // Extension Settings
 export interface ExtensionSettings {
   downloadPath: string;
   autoCloseModal: boolean;
   showPreview: boolean;
+  filenameFormat: FilenameFormat;
 }
 
 // Download Item

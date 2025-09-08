@@ -1,4 +1,4 @@
-import { ModalState, IllustInfo } from '../types';
+import { ModalState, IllustInfo, ExtensionSettings, FilenameFormat } from '../types';
 import { PixivAPI } from './api';
 import '../styles/main.css';
 
@@ -11,11 +11,90 @@ export class ModalManager {
     isLoading: false,
     error: null
   };
+  private settings: ExtensionSettings = {
+    downloadPath: 'pixiv_downloads',
+    autoCloseModal: true,
+    showPreview: true,
+    filenameFormat: 'title_page'
+  };
 
   constructor() {
     // Simple CSS handles all styling
     // 自身をグローバルに登録
     (window as any).modalManager = this;
+    this.loadSettings();
+  }
+
+  private async loadSettings() {
+    try {
+      const response = await chrome.runtime.sendMessage({ type: 'GET_SETTINGS' });
+      if (response.success && response.data) {
+        this.settings = { ...this.settings, ...response.data };
+      }
+    } catch (error) {
+      console.error('Failed to load settings:', error);
+    }
+  }
+
+  private sanitizeFilename(filename: string): string {
+    // Windowsで使えない文字を置換
+    return filename
+      .replace(/</g, '＜')
+      .replace(/>/g, '＞')
+      .replace(/:/g, '：')
+      .replace(/"/g, '＂')
+      .replace(/\|/g, '｜')
+      .replace(/\?/g, '？')
+      .replace(/\*/g, '＊')
+      .replace(/\\/g, '￥')
+      .replace(/\//g, '／')       // / を ／ に置換
+      .replace(/[\x00-\x1F\x7F]/g, '') // 制御文字を削除
+      .replace(/[ ]+/g, ' ')      // 連続するスペースを1つに
+      .trim()                     // 先頭と末尾のスペースを削除
+      .replace(/^\./, '_')           // 先頭のドットを _ に置換
+      .replace(/[\/]+/g, '/');       // 連続するスラッシュを1つに
+  }
+
+  private generateFilename(title: string, userName: string, id: string, pageIndex: number): string {
+    const sanitizedTitle = this.sanitizeFilename(title);
+    const sanitizedUserName = this.sanitizeFilename(userName);
+    const encodedTitle = encodeURIComponent(sanitizedTitle);
+    const encodedUserName = encodeURIComponent(sanitizedUserName);
+
+    // windowsでも、スラッシュ区切りで問題ない
+    
+    switch (this.settings.filenameFormat) {
+      case 'title_page':
+        return `${encodedTitle}_${pageIndex + 1}.png`;
+      case 'id_page':
+        return `${id}_${pageIndex + 1}.png`;
+      case 'author_title_page':
+        return `${encodedUserName}/${encodedTitle}_${pageIndex + 1}.png`;
+      case 'author_id_page':
+        return `${encodedUserName}/${id}_${pageIndex + 1}.png`;
+      default:
+        return `${encodedTitle}_${pageIndex + 1}.png`;
+    }
+  }
+
+  private generateFolderName(title: string, userName: string, id: string): string {
+    const sanitizedTitle = this.sanitizeFilename(title);
+    const sanitizedUserName = this.sanitizeFilename(userName);
+    const encodedTitle = encodeURIComponent(sanitizedTitle);
+    const encodedUserName = encodeURIComponent(sanitizedUserName);
+    
+    switch (this.settings.filenameFormat) {
+      case 'title_page':
+        return encodedTitle;
+      case 'id_page':
+        return id;
+      case 'author_title_page':
+        return `${encodedUserName}/${encodedTitle}`;
+      case 'author_id_page':
+        return `${encodedUserName}/${id}`;
+      default:
+        return encodedTitle;
+    }
   }
 
   
@@ -179,14 +258,18 @@ export class ModalManager {
     const imageWrappers = this.modal.querySelectorAll('.pixiv-image-wrapper');
     imageWrappers.forEach((wrapper, index) => {
       const url = wrapper.getAttribute('data-url');
-      console.log("title", this.state.currentIllust?.title);
-      const safeTitle = encodeURIComponent((this.state.currentIllust?.title || 'untitled').trim());
       
       if (url) {
         wrapper.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          this.downloadImage(url, `${safeTitle}_${index + 1}.png`, this.state.currentIllust?.id);
+          const filename = this.generateFilename(
+            this.state.currentIllust?.title || 'untitled',
+            this.state.currentIllust?.userName || 'Unknown User',
+            this.state.currentIllust?.id || 'unknown',
+            index
+          );
+          this.downloadImage(url, filename, this.state.currentIllust?.id);
         });
       }
     });
@@ -236,9 +319,12 @@ export class ModalManager {
 
   async downloadAllImages() {
     if (!this.state.currentIllust || !this.state.images.length) return;
-
-    const safeTitle = encodeURIComponent((this.state.currentIllust?.title || 'untitled').trim());
-    const folderName = safeTitle;
+    
+    const folderName = this.generateFolderName(
+      this.state.currentIllust?.title || 'untitled',
+      this.state.currentIllust?.userName || 'Unknown User',
+      this.state.currentIllust?.id || 'unknown'
+    );
     
     for (let i = 0; i < this.state.images.length; i++) {
       const url = this.state.images[i];

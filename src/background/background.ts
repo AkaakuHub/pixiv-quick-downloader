@@ -5,7 +5,8 @@ class BackgroundService {
   private settings: ExtensionSettings = {
     downloadPath: 'pixiv_downloads',
     autoCloseModal: true,
-    showPreview: true
+    showPreview: true,
+    filenameFormat: 'title_page'
   };
 
   constructor() {

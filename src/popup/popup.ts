@@ -1,4 +1,4 @@
-import { ExtensionSettings } from '../types';
+import { ExtensionSettings, FilenameFormat } from '../types';
 import '../styles/main.css';
 
 class PopupManager {
@@ -8,7 +8,8 @@ class PopupManager {
     this.settings = {
       downloadPath: 'pixiv_downloads',
       autoCloseModal: true,
-      showPreview: true
+      showPreview: true,
+      filenameFormat: 'title_page'
     };
     this.init();
   }
@@ -40,16 +41,22 @@ class PopupManager {
     document.getElementById('showPreview')?.addEventListener('change', (e) => {
       this.settings.showPreview = (e.target as HTMLInputElement).checked;
     });
+
+    document.getElementById('filenameFormat')?.addEventListener('change', (e) => {
+      this.settings.filenameFormat = (e.target as HTMLSelectElement).value as FilenameFormat;
+    });
   }
 
   private updateUI() {
     const downloadPathInput = document.getElementById('downloadPath') as HTMLInputElement;
     const autoCloseModalCheckbox = document.getElementById('autoCloseModal') as HTMLInputElement;
     const showPreviewCheckbox = document.getElementById('showPreview') as HTMLInputElement;
+    const filenameFormatSelect = document.getElementById('filenameFormat') as HTMLSelectElement;
 
     if (downloadPathInput) downloadPathInput.value = this.settings.downloadPath;
     if (autoCloseModalCheckbox) autoCloseModalCheckbox.checked = this.settings.autoCloseModal;
     if (showPreviewCheckbox) showPreviewCheckbox.checked = this.settings.showPreview;
+    if (filenameFormatSelect) filenameFormatSelect.value = this.settings.filenameFormat;
   }
 
   private async loadSettings() {
