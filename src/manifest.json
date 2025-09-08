@@ -29,7 +29,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Pixiv Downloader"
+    "default_title": "Pixiv Quick Downloader"
   },
   "icons": {
     "16": "icons/icon16.png",
