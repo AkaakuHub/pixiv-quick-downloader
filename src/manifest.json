@@ -3,8 +3,12 @@
   "name": "Pixiv Quick Downloader",
   "version": "1.0.0",
   "description": "Download pixiv images easily from search results",
-  "permissions": ["downloads", "storage", "tabs", "declarativeNetRequestWithHostAccess"],
-  "host_permissions": ["https://www.pixiv.net/*", "*://*.pximg.net/*"],
+  "permissions": ["downloads", "storage", "tabs"],
+  "host_permissions": [
+    "https://www.pixiv.net/tags/*",
+    "https://www.pixiv.net/en/tags/*",
+    "*://*.pximg.net/*"
+  ],
   "content_scripts": [
     {
       "matches": ["https://www.pixiv.net/tags/*", "https://www.pixiv.net/en/tags/*"],
@@ -22,15 +26,6 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  },
-  "declarative_net_request": {
-    "rule_resources": [
-      {
-        "id": "ruleset_1",
-        "enabled": true,
-        "path": "rules.json"
-      }
-    ]
   },
   "web_accessible_resources": [
     {

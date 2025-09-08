@@ -37,7 +37,6 @@ This extension requires the following permissions:
 - `downloads` - To save images to your computer
 - `storage` - To store user preferences
 - `tabs` - To manage extension tabs
-- `declarativeNetRequestWithHostAccess` - To handle image requests
 
 ## Privacy Policy
 
