@@ -14,7 +14,7 @@
   "host_permissions": ["https://www.pixiv.net/*", "*://*.pximg.net/*"],
   "content_scripts": [
     {
-      "matches": ["https://www.pixiv.net/tags/*/artworks*", "https://www.pixiv.net/search.php*"],
+      "matches": ["https://www.pixiv.net/tags/*"],
       "js": ["content.js"]
     }
   ],
