@@ -7,7 +7,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
-    "build:store": "pnpm build && mkdir -p package && cp -r dist/* package/ && cd package && zip -r ../pixiv-downloader-extension-v$(node -p \"require('./package.json').version\").zip . && cd .. && rm -rf package",
+    "build:store": "pnpm build && mkdir -p package && cp -r dist/* package/ && cd package && zip -r ../pixiv-quick-downloader-v$(node -e \"console.log(require('../package.json').version)\").zip . && cd .. && rm -rf package",
     "watch": "webpack --mode development --watch",
     "clean": "rm -rf dist/*",
     "type-check": "tsc --noEmit",
