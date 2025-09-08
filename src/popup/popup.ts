@@ -61,12 +61,38 @@ class PopupManager {
 
   private async loadSettings() {
     try {
+      console.log('Popup: Loading settings...');
       const response = await chrome.runtime.sendMessage({ type: 'GET_SETTINGS' });
+      console.log('Popup: GET_SETTINGS response:', response);
+      
       if (response.success && response.data) {
-        this.settings = { ...this.settings, ...response.data };
+        const loadedSettings = response.data;
+        console.log('Popup: Loaded settings:', loadedSettings);
+        
+        // 型安全な設定マージ
+        if (loadedSettings.downloadPath !== undefined) {
+          this.settings.downloadPath = loadedSettings.downloadPath;
+          console.log('Popup: Set downloadPath to:', loadedSettings.downloadPath);
+        }
+        if (loadedSettings.autoCloseModal !== undefined) {
+          this.settings.autoCloseModal = loadedSettings.autoCloseModal;
+          console.log('Popup: Set autoCloseModal to:', loadedSettings.autoCloseModal);
+        }
+        if (loadedSettings.showPreview !== undefined) {
+          this.settings.showPreview = loadedSettings.showPreview;
+          console.log('Popup: Set showPreview to:', loadedSettings.showPreview);
+        }
+        if (loadedSettings.filenameFormat !== undefined) {
+          this.settings.filenameFormat = loadedSettings.filenameFormat as FilenameFormat;
+          console.log('Popup: Set filenameFormat to:', loadedSettings.filenameFormat);
+        }
+        
+        console.log('Popup: Final settings after load:', this.settings);
+      } else {
+        console.error('Popup: Failed to load settings - response:', response);
       }
     } catch (error) {
-      console.error('Failed to load settings:', error);
+      console.error('Popup: Error loading settings:', error);
     }
   }
 

@@ -1,4 +1,4 @@
-import { ExtensionSettings } from '../types';
+import { ExtensionSettings, FilenameFormat } from '../types';
 
 // バックグラウンドサービスワーカー
 class BackgroundService {
@@ -6,7 +6,7 @@ class BackgroundService {
     downloadPath: 'pixiv_downloads',
     autoCloseModal: true,
     showPreview: true,
-    filenameFormat: 'title_page'
+    filenameFormat: 'title_page' as FilenameFormat
   };
 
   constructor() {
@@ -19,10 +19,18 @@ class BackgroundService {
     });
 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      // popupからのメッセージもハンドルする
+      if (sender.tab === undefined && sender.url !== undefined) {
+        // popupからのメッセージ
+        this.handleMessage(request, sender, sendResponse);
+        return true;
+      }
+      
       // offscreen documentからのメッセージはハンドルしない
       if (sender.tab === undefined) {
         return false;
       }
+      
       this.handleMessage(request, sender, sendResponse);
       return true; // 非同期レスポンスを許可
     });
@@ -41,7 +49,12 @@ class BackgroundService {
           break;
           
         case 'UPDATE_SETTINGS':
-          this.settings = { ...this.settings, ...request.payload };
+          // 型安全な設定マージ
+          const newSettings = request.payload;
+          if (newSettings.downloadPath !== undefined) this.settings.downloadPath = newSettings.downloadPath;
+          if (newSettings.autoCloseModal !== undefined) this.settings.autoCloseModal = newSettings.autoCloseModal;
+          if (newSettings.showPreview !== undefined) this.settings.showPreview = newSettings.showPreview;
+          if (newSettings.filenameFormat !== undefined) this.settings.filenameFormat = newSettings.filenameFormat as FilenameFormat;
           await this.saveSettings();
           sendResponse({ success: true });
           break;
@@ -55,12 +68,16 @@ class BackgroundService {
           sendResponse({ success: false, error: 'Unknown message type' });
       }
     } catch (error) {
+      console.error('Background: Error handling message:', error);
       sendResponse({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
     }
   }
 
   private async handleDownload(payload: { url: string; filename: string; illustId?: string }) {
     try {
+      if (!payload.illustId) {
+        throw new Error('Invalid illustration ID');
+      }
       // 画像を取得
       const response = await fetch(payload.url, {
         headers: {
@@ -118,7 +135,12 @@ class BackgroundService {
     try {
       const result = await chrome.storage.sync.get('settings');
       if (result.settings) {
-        this.settings = { ...this.settings, ...result.settings };
+        const loadedSettings = result.settings;
+        // 型安全な設定マージ
+        if (loadedSettings.downloadPath !== undefined) this.settings.downloadPath = loadedSettings.downloadPath;
+        if (loadedSettings.autoCloseModal !== undefined) this.settings.autoCloseModal = loadedSettings.autoCloseModal;
+        if (loadedSettings.showPreview !== undefined) this.settings.showPreview = loadedSettings.showPreview;
+        if (loadedSettings.filenameFormat !== undefined) this.settings.filenameFormat = loadedSettings.filenameFormat as FilenameFormat;
       }
     } catch (error) {
       // Settings load failed, using defaults
