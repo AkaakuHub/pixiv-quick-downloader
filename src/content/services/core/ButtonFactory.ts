@@ -12,7 +12,10 @@ export interface IButtonFactory {
 
 export class ButtonFactory implements IButtonFactory {
   createDownloadButton(illustId: string, clickHandler: () => void): HTMLElement {
-    const button = this.createBaseButton("pixiv-download-btn", "ダウンロード");
+    const button = this.createBaseButton(
+      "pixiv-download-btn pixiv-search-download-btn",
+      "ダウンロード"
+    );
     button.addEventListener("click", e => {
       e.preventDefault();
       e.stopPropagation();

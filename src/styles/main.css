@@ -35,9 +35,6 @@
 
 /* Download Button Styles */
 .pixiv-download-btn {
-  position: absolute !important;
-  bottom: 8px !important;
-  left: 8px !important;
   background: rgba(0, 150, 250, 0.9) !important;
   color: white !important;
   border-radius: 50% !important;
@@ -58,6 +55,13 @@
   transform: scale(1.1) !important;
 }
 
+/* Search Page Download Button Styles */
+.pixiv-search-download-btn {
+  position: absolute !important;
+  bottom: 8px !important;
+  left: 8px !important;
+}
+
 .pixiv-card:hover .pixiv-download-btn {
   opacity: 1 !important;
   pointer-events: auto !important;
@@ -72,10 +76,26 @@
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
+  justify-content: center !important;
   gap: 4px !important;
   z-index: 1000 !important;
   opacity: 1 !important;
   pointer-events: auto !important;
+}
+
+.pixiv-detail-download-btn {
+  background: rgba(0, 150, 250, 0.9) !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  position: static !important;
 }
 
 .pixiv-detail-download-btn:hover {
