@@ -33,9 +33,25 @@ export class DetailPageSelector implements IIllustInfoSelector {
 
   private getDetailPageUserName(): string {
     // 詳細ページのユーザー名取得ロジック
-    const userElement = document.querySelector('a[href*="/users/"]') as HTMLElement;
-    const userDiv = userElement?.querySelector("div") as HTMLElement;
-    return userDiv?.textContent?.trim() || "Unknown User";
+    const userElements = document.querySelectorAll('a[href*="/users/"][data-gtm-value]');
+
+    for (const userElement of userElements) {
+      const gtmValue = userElement.getAttribute("data-gtm-value");
+      const href = userElement.getAttribute("href");
+
+      if (gtmValue && href) {
+        const userIdMatch = href.match(/\/users\/(\d+)/);
+        const userId = userIdMatch ? userIdMatch[1] : null;
+
+        // usersの行き先とdata-gtm-valueが一致する要素を探す
+        if (userId && gtmValue === userId) {
+          const userDiv = userElement.querySelector("div") as HTMLElement;
+          return userDiv?.title?.trim() || "Unknown User";
+        }
+      }
+    }
+
+    return "Unknown User";
   }
 
   private getDetailPageCount(): number {
