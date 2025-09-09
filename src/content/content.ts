@@ -22,11 +22,11 @@ export class PixivDownloader {
   private contentView: IContentView;
 
   constructor() {
-    // 各サービスを初期化
+    // 各サービスを初期化（依存性の順序を考慮）
     this.modalManager = new ModalManager();
     this.pageDetector = new PageDetector();
-    this.domFinder = new DomElementFinder();
     this.urlParser = new UrlParser();
+    this.domFinder = new DomElementFinder(this.urlParser);
     this.buttonFactory = new ButtonFactory();
     this.observerManager = new DomObserverManager();
     this.downloadHandler = new DownloadHandler(this.modalManager);
@@ -50,7 +50,7 @@ export class PixivDownloader {
 
     // ページタイプに応じて初期化
     if (pageType === "detail") {
-      // 何も
+      // 詳細ページは「すべて見る」ボタンクリック時にボタンを追加
     } else if (pageType === "search") {
       this.contentView.addDownloadButtons();
     }
@@ -78,9 +78,9 @@ export class PixivDownloader {
         if (this.stateManager.getState().currentPageType === "search") {
           this.contentView.addDownloadButtons();
         } else if (this.stateManager.getState().currentPageType === "detail") {
-          // 何も
+          // 詳細ページは「すべて見る」ボタンクリック時に処理
         }
-      }, 500);
+      }, 10); // イラストDOMが完全に追加されるまで少し待つ
     });
 
     // 「すべて見る」ボタン監視

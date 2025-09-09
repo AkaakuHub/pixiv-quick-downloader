@@ -46,7 +46,6 @@ export class PixivAPI {
       }
 
       if (!targetCard) {
-        console.warn(`Could not find card element for illustId: ${illustId}`);
         return {
           id: illustId,
           title: `作品 ${illustId}`,

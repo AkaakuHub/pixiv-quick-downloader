@@ -29,11 +29,7 @@ export class DownloadHandler implements IDownloadHandler {
 
       // ダウンロードを実行
       await modalService.downloadImage(imageUrl, filename, illustId);
-    } catch (error) {
-      console.error(
-        `[DownloadHandler] Download failed for illust ${illustId}, page ${pageIndex}:`,
-        error
-      );
+    } catch {
       alert("ダウンロードに失敗しました");
     }
   }

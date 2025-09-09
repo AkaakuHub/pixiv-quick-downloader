@@ -1,11 +1,14 @@
+import { IUrlParser } from "./UrlParser";
+
 export interface IDomElementFinder {
   findIllustCards(): HTMLElement[];
   findDetailPageImageContainers(): HTMLElement[];
 }
 
 export class DomElementFinder implements IDomElementFinder {
+  constructor(private urlParser: IUrlParser) {}
+
   findIllustCards(): HTMLElement[] {
-    // 正しいセレクタを決め打ち
     const selector = '[href*="/artworks/"]';
     const elements = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
 
@@ -89,12 +92,6 @@ export class DomElementFinder implements IDomElementFinder {
   }
 
   private getIllustId(element: HTMLElement): string | null {
-    // hrefからIDを抽出
-    const href = element.getAttribute("href") || "";
-    const hrefMatch = href.match(/\/artworks\/(\d+)/);
-    if (hrefMatch) return hrefMatch[1];
-
-    console.warn("Failed to extract illustId from element");
-    return null;
+    return this.urlParser.getIllustId(element);
   }
 }
