@@ -21,6 +21,10 @@ export class ModalManager {
     await this.service.loadSettings();
   }
 
+  getModalService(): ModalService {
+    return this.service;
+  }
+
   async openModal(illustId: string) {
     this.stateManager.setLoading(true);
     this.stateManager.setError(null);

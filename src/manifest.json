@@ -7,7 +7,12 @@
   "host_permissions": ["https://www.pixiv.net/*", "*://*.pximg.net/*"],
   "content_scripts": [
     {
-      "matches": ["https://www.pixiv.net/tags/*", "https://www.pixiv.net/en/tags/*"],
+      "matches": [
+        "https://www.pixiv.net/tags/*",
+        "https://www.pixiv.net/en/tags/*",
+        "https://www.pixiv.net/artworks/*",
+        "https://www.pixiv.net/en/artworks/*"
+      ],
       "js": ["content.js"]
     }
   ],

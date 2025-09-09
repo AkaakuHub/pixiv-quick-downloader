@@ -64,6 +64,51 @@
   pointer-events: auto !important;
 }
 
+/* Detail Page Download Button Styles */
+.pixiv-detail-download-btn {
+  position: absolute !important;
+  top: 50% !important;
+  left: -40px !important;
+  transform: translateY(-50%) !important;
+  background: rgba(0, 150, 250, 0.9) !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  z-index: 1000 !important;
+  transition: all 0.2s ease !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.pixiv-detail-download-btn:hover {
+  background: rgba(0, 150, 250, 1) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
+
+.pixiv-detail-container {
+  position: relative !important;
+}
+
+/* Responsive adjustments for detail page buttons */
+@media (max-width: 768px) {
+  .pixiv-detail-download-btn {
+    left: -30px !important;
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  .pixiv-detail-download-btn svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
 /* Modal Container */
 .pixiv-modal-container {
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%) !important;
