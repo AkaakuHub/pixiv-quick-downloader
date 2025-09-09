@@ -1,4 +1,5 @@
 import { createDownloadSvg } from "./ContentStateManager";
+import { I18n } from "../../../i18n/i18n";
 
 export interface IButtonFactory {
   createDownloadButton(illustId: string, clickHandler: () => void): HTMLElement;
@@ -11,6 +12,7 @@ export interface IButtonFactory {
 }
 
 export class ButtonFactory implements IButtonFactory {
+  private i18n = I18n.getInstance();
   createDownloadButton(illustId: string, clickHandler: () => void): HTMLElement {
     const button = this.createBaseButton(
       "pixiv-download-btn pixiv-search-download-btn",
@@ -30,38 +32,28 @@ export class ButtonFactory implements IButtonFactory {
     pageIndex: number,
     clickHandler: (filename: string) => void
   ): HTMLElement {
-    console.log("ButtonFactory.createDetailPageDownloadButton called");
-
     const container = document.createElement("div");
     container.className = "pixiv-detail-download-container";
-    console.log("Created container:", container);
-
     const button = this.createBaseButton(
       "pixiv-download-btn pixiv-detail-download-btn",
       "ダウンロード"
     );
-    console.log("Created button:", button);
-
     const input = document.createElement("input");
     input.type = "text";
     input.className = "pixiv-filename-input pixiv-detail-filename-input";
     input.id = `pixiv-filename-input-${illustId}-${pageIndex}`;
     input.name = `pixiv-filename-${illustId}-${pageIndex}`;
-    input.placeholder = "ファイル名を入力";
-    input.title = "ファイル名を入力すると、設定より優先されます";
-    console.log("Created input:", input);
+    input.placeholder = `${this.i18n.t("filenamePlaceholder")}`;
 
     button.addEventListener("click", async e => {
       e.preventDefault();
       e.stopPropagation();
       const filename = input.value.trim();
-      console.log("Button clicked, filename:", filename);
       clickHandler(filename);
     });
 
     container.appendChild(button);
     container.appendChild(input);
-    console.log("Final container with children:", container);
     return container;
   }
 

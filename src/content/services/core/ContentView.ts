@@ -39,35 +39,23 @@ export class ContentView implements IContentView {
   }
 
   addArtworkDetailButtons(): void {
-    console.log("addArtworkDetailButtons called");
     const imageContainers = this.domFinder.findDetailPageImageContainers();
-    console.log("Found imageContainers:", imageContainers.length);
-
-    imageContainers.forEach((container, index) => {
-      console.log(`Processing container ${index}:`, container);
-
+    imageContainers.forEach(container => {
       if (container.querySelector(".pixiv-detail-download-container")) {
-        console.log("Container already has detail download container, skipping");
         return; // すでに追加済み
       }
 
       const originalImageLink = container.querySelector('a[href*="img-original"][target="_blank"]');
-      console.log("Found originalImageLink:", !!originalImageLink);
-
       if (!originalImageLink) {
-        console.log("No original image link found, skipping container");
         return;
       }
 
       const imageUrl = originalImageLink.getAttribute("href") || "";
-      console.log("Image URL:", imageUrl);
 
       const illustId = this.urlParser.getIllustIdFromUrl(imageUrl);
       const pageIndex = this.urlParser.getPageIndexFromUrl(imageUrl);
-      console.log("Illust ID:", illustId, "Page index:", pageIndex);
 
       if (!illustId || pageIndex === null) {
-        console.log("Invalid illust ID or page index, skipping");
         return;
       }
 
