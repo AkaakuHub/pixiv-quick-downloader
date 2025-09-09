@@ -13,8 +13,8 @@
     "type-check": "tsc --noEmit",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "format": "prettier --write src/**/*.{ts,html,json}",
-    "format:check": "prettier --check src/**/*.{ts,html,json}",
+    "format": "npx prettier --write \"src/**/*.{ts,html,json}\"",
+    "format:check": "npx prettier --check \"src/**/*.{ts,html,json}\"",
     "check": "pnpm type-check && pnpm lint && pnpm format:check",
     "knip": "knip"
   },
