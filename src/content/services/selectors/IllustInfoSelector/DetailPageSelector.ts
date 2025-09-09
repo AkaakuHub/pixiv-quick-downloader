@@ -8,10 +8,7 @@ export class DetailPageSelector implements IIllustInfoSelector {
 
   async getIllustInfo(illustId: string): Promise<IllustInfo> {
     try {
-      // TODO: 詳細ページ用のセレクタを実装
-      // ここに詳細ページの作品情報取得ロジックを実装
-
-      // 仮の実装 - 後で実際のセレクタに置き換える
+      // 詳細ページの情報取得ロジック
       return {
         id: illustId,
         title: this.getDetailPageTitle(),
@@ -36,8 +33,9 @@ export class DetailPageSelector implements IIllustInfoSelector {
 
   private getDetailPageUserName(): string {
     // 詳細ページのユーザー名取得ロジック
-    const userElement = document.querySelector("[data-user-name]") as HTMLElement;
-    return userElement?.textContent?.trim() || "Unknown User";
+    const userElement = document.querySelector('a[href*="/users/"]') as HTMLElement;
+    const userDiv = userElement?.querySelector("div") as HTMLElement;
+    return userDiv?.textContent?.trim() || "Unknown User";
   }
 
   private getDetailPageCount(): number {
