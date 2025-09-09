@@ -36,11 +36,13 @@ export class SearchPageSelector implements IIllustInfoSelector {
         }
       }
 
-      // ユーザー名を取得 - aria-label="ユーザー名"を持つ要素を検索
+      // ユーザー名を取得 - hrefに/users/を含むaタグから
       let userName = "Unknown User";
-      const userElement = targetCard.querySelector('[aria-label*="ユーザー名"]') as HTMLElement;
-      if (userElement && userElement.textContent) {
-        userName = userElement.textContent.trim();
+      const userElements = targetCard.querySelectorAll('a[href*="/users/"]');
+      if (userElements.length > 0) {
+        const userElement = userElements[0] as HTMLElement;
+        const userDiv = userElement.querySelector("div") as HTMLElement;
+        userName = userDiv?.title?.trim() || "Unknown User";
       }
 
       // ページ数を取得 - aria-labelからページ数を抽出
