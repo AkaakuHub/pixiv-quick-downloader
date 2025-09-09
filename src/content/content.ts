@@ -111,7 +111,7 @@ export class PixivDownloader {
   }
 
   private findDetailPageImageContainers(): HTMLElement[] {
-    // 詳細ページ用の安定したセレクタ（複数のフォールバック）
+    // 詳細ページ用の安定したセレクタ（確定要素のみを使用）
     const selectors = [
       'div[role="presentation"]:has(a[href*="img-original"][target="_blank"])', // 主要セレクタ
       'div[role="presentation"] a[href*="img-original"][target="_blank"]', // リンク直接検索
@@ -141,19 +141,29 @@ export class PixivDownloader {
             let finalContainer: HTMLElement | null = null;
 
             if (container) {
-              // presentationコンテナが見つかった場合、さらにその親を探して適切なコンテナを特定
+              // presentationコンテナが見つかった場合、カードコンテナかどうかを確認
+              // カードコンテナはdiv[id]を持つ親要素を持つ
               const parentContainer = container.parentElement;
-              if (
-                parentContainer &&
-                parentContainer.querySelector('a[href*="img-original"][target="_blank"]')
-              ) {
+              const hasIdDiv = parentContainer && parentContainer.querySelector("div[id]");
+              if (hasIdDiv && parentContainer) {
+                // カードコンテナが見つかった場合、その親を使用
                 finalContainer = parentContainer as HTMLElement;
-              } else {
+              } else if (container.querySelector('a[href*="img-original"][target="_blank"]')) {
+                // presentationコンテナ自体がimg-originalを含む場合
                 finalContainer = container as HTMLElement;
+              } else {
+                // その他の場合はリンクの親要素を使用
+                finalContainer = el.parentElement as HTMLElement;
               }
             } else {
               // presentationコンテナが見つからない場合、リンクの親要素を使用
               finalContainer = el.parentElement as HTMLElement;
+            }
+
+            // プレビューセクションを除外（aria-label="プレビュー"を持つコンテナをスキップ）
+            if (finalContainer && finalContainer.querySelector('[aria-label="プレビュー"]')) {
+              console.log(`[PixivDownloader] Skipping preview container`);
+              return;
             }
 
             if (finalContainer && !containerMap.has(finalContainer)) {
@@ -163,7 +173,7 @@ export class PixivDownloader {
           });
         } else {
           // 直接コンテナ要素の場合
-          containers = elements;
+          containers = elements.filter(el => !el.querySelector('[aria-label="プレビュー"]'));
         }
 
         console.log(`[PixivDownloader] Final containers found:`, containers.length);
@@ -174,6 +184,8 @@ export class PixivDownloader {
           console.log(`[PixivDownloader] Container ${index + 1}:`, {
             hasImageLink: !!imageLink,
             imageUrl: imageLink?.getAttribute("href")?.substring(0, 50) + "...",
+            hasIdDiv: !!container.querySelector("div[id]"),
+            hasPreview: !!container.querySelector('[aria-label="プレビュー"]'),
             containerHTML: container.outerHTML.substring(0, 100) + "...",
           });
         });
