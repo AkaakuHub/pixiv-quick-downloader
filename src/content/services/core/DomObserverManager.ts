@@ -7,6 +7,8 @@ export interface IDomObserverManager {
 export class DomObserverManager implements IDomObserverManager {
   private observer: MutationObserver | null = null;
   private showAllClickHandler: ((event: Event) => void) | null = null;
+  private isProcessing = false; // 重複実行防止フラグ
+  private lastProcessTime = 0; // 最後の処理時間
 
   setupObserver(callback: () => void): void {
     // DOMの変更を監視して、新しいカードにボタンを追加
@@ -36,43 +38,69 @@ export class DomObserverManager implements IDomObserverManager {
   }
 
   setupShowAllButtonObserver(callback: () => void): void {
-    // 「すべて見る」ボタンのクリックイベントを監視
-    const handleShowAllClick = (event: Event) => {
+    // 複数のトリガーを監視
+    const handleInteraction = (event: Event) => {
       const target = event.target as HTMLElement;
 
-      // ボタンまたはその子要素がクリックされたかチェック
+      // トリガー1: 「すべて見る」ボタン
       const showAllButton = target.closest("button") as HTMLElement;
       if (showAllButton && showAllButton.textContent?.trim().includes("すべて見る")) {
-        // 短い遅延でDOMの生成を待つが、頻繁にチェックする
-        const checkInterval = 100; // 100msごとにチェック
-        const maxWaitTime = 2000; // 最大2秒待つ
-        let elapsedTime = 0;
+        this.triggerDomUpdate(callback);
+        return;
+      }
 
-        const checkDomReady = () => {
-          elapsedTime += checkInterval;
-
-          // img-originalを持つ要素が存在するか確認
-          const hasOriginalImages =
-            document.querySelectorAll('a[href*="img-original"][target="_blank"]').length > 0;
-
-          if (hasOriginalImages || elapsedTime >= maxWaitTime) {
-            // DOMが準備完了、またはタイムアウト
-            callback();
-          } else {
-            // まだ準備できていないので続けてチェック
-            setTimeout(checkDomReady, checkInterval);
-          }
-        };
-
-        // 最初のチェックを少し遅らせて開始
-        setTimeout(checkDomReady, 400);
+      // トリガー2: 画像コンテナのクリック（img要素から上のdiv）
+      const clickedImage = target.closest("img") as HTMLElement;
+      if (clickedImage) {
+        // 画像の親要素をたどって詳細ページコンテナを探す
+        const clickTarget = clickedImage.parentElement;
+        if (clickTarget) {
+          this.triggerDomUpdate(callback);
+        }
       }
     };
 
-    document.addEventListener("click", handleShowAllClick, true); // キャプチャフェーズでイベントを監視
+    document.addEventListener("click", handleInteraction, true); // キャプチャフェーズでイベントを監視
 
     // 破棄時にイベントリスナーを削除できるように保持
-    this.showAllClickHandler = handleShowAllClick;
+    this.showAllClickHandler = handleInteraction;
+  }
+
+  // DOM更新をトリガーする共通処理
+  private triggerDomUpdate(callback: () => void): void {
+    // 重複実行を防止
+    const now = Date.now();
+    if (this.isProcessing || now - this.lastProcessTime < 1000) {
+      return; // 1秒以内の再実行は防止
+    }
+
+    this.isProcessing = true;
+    this.lastProcessTime = now;
+
+    // 短い遅延でDOMの生成を待つが、頻繁にチェックする
+    const checkInterval = 100; // 100msごとにチェック
+    const maxWaitTime = 2000; // 最大2秒待つ
+    let elapsedTime = 0;
+
+    const checkDomReady = () => {
+      elapsedTime += checkInterval;
+
+      // img-originalを持つ要素が存在するか確認
+      const hasOriginalImages =
+        document.querySelectorAll('a[href*="img-original"][target="_blank"]').length > 0;
+
+      if (hasOriginalImages || elapsedTime >= maxWaitTime) {
+        // DOMが準備完了、またはタイムアウト
+        this.isProcessing = false;
+        callback();
+      } else {
+        // まだ準備できていないので続けてチェック
+        setTimeout(checkDomReady, checkInterval);
+      }
+    };
+
+    // 最初のチェックを少し遅らせて開始
+    setTimeout(checkDomReady, 400);
   }
 
   destroy(): void {
@@ -87,5 +115,9 @@ export class DomObserverManager implements IDomObserverManager {
       document.removeEventListener("click", handler, true);
       this.showAllClickHandler = null;
     }
+
+    // 状態フラグをリセット
+    this.isProcessing = false;
+    this.lastProcessTime = 0;
   }
 }
