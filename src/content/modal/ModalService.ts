@@ -2,30 +2,23 @@ import { ExtensionSettings, IllustInfo } from "../../types";
 import { PixivAPI } from "../api";
 import { I18n } from "../../i18n";
 import { FilenameGenerator } from "./FilenameGenerator";
+import { SettingsManager } from "../services/core/ContentStateManager";
 
 export class ModalService {
-  private settings: ExtensionSettings = {
-    filenameFormat: "title_page",
-  };
+  private settingsManager: SettingsManager;
   private i18n: I18n;
   private filenameGenerator: FilenameGenerator;
 
   constructor() {
+    this.settingsManager = new SettingsManager();
     this.i18n = I18n.getInstance();
-    this.filenameGenerator = new FilenameGenerator(this.settings);
+    this.filenameGenerator = new FilenameGenerator(this.settingsManager.getSettings());
     this.loadSettings();
   }
 
   async loadSettings() {
-    try {
-      const response = await chrome.runtime.sendMessage({ type: "GET_SETTINGS" });
-      if (response.success && response.data) {
-        this.settings = { ...this.settings, ...response.data };
-        this.filenameGenerator.updateSettings(this.settings);
-      }
-    } catch (error) {
-      console.error("Failed to load settings:", error);
-    }
+    await this.settingsManager.loadSettings();
+    this.filenameGenerator.updateSettings(this.settingsManager.getSettings());
   }
 
   async fetchIllustData(illustId: string): Promise<{
@@ -87,6 +80,6 @@ export class ModalService {
   }
 
   getSettings(): ExtensionSettings {
-    return this.settings;
+    return this.settingsManager.getSettings();
   }
 }

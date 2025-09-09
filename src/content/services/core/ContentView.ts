@@ -3,7 +3,7 @@ import { IDomElementFinder } from "./DomElementFinder";
 import { IUrlParser } from "./UrlParser";
 import { IDownloadHandler } from "./DownloadHandler";
 import { ModalManager } from "../../modal";
-import { ExtendedWindow } from "../../../types";
+import { registerModalManager } from "./ContentStateManager";
 
 export interface IContentView {
   addDownloadButtons(): void;
@@ -31,7 +31,7 @@ export class ContentView implements IContentView {
 
       const button = this.buttonFactory.createDownloadButton(illustId, () => {
         // モーダルマネージャーをグローバルに登録してから開く
-        (window as ExtendedWindow).modalManager = this.modalManager;
+        registerModalManager(this.modalManager);
         this.modalManager.openModal(illustId);
       });
       card.appendChild(button);
@@ -76,7 +76,7 @@ export class ContentView implements IContentView {
 
   private handleDetailPageDownload(imageUrl: string, illustId: string, pageIndex: number): void {
     // モーダルマネージャーをグローバルに登録
-    (window as ExtendedWindow).modalManager = this.modalManager;
+    registerModalManager(this.modalManager);
 
     // 直接ダウンロード処理を呼び出し
     this.downloadHandler.downloadDetailPageImage(imageUrl, illustId, pageIndex);

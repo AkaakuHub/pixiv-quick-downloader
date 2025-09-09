@@ -1,4 +1,3 @@
-import { ExtendedWindow } from "../types";
 import { ModalManager } from "./modal";
 import { IPageDetector, PageDetector } from "./services/core/PageDetector";
 import { IDomElementFinder, DomElementFinder } from "./services/core/DomElementFinder";
@@ -8,6 +7,7 @@ import { IDomObserverManager, DomObserverManager } from "./services/core/DomObse
 import { IDownloadHandler, DownloadHandler } from "./services/core/DownloadHandler";
 import { IContentStateManager, ContentStateManager } from "./services/core/ContentStateManager";
 import { IContentView, ContentView } from "./services/core/ContentView";
+import { registerModalManager } from "./services/core/ContentStateManager";
 import "../styles/main.css";
 
 export class PixivDownloader {
@@ -59,7 +59,7 @@ export class PixivDownloader {
     this.setupObservers();
 
     // グローバルに公開（モーダル内からの呼び出し用）
-    (window as ExtendedWindow).modalManager = this.modalManager;
+    registerModalManager(this.modalManager);
 
     this.stateManager.setIsInitialized(true);
   }

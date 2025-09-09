@@ -98,16 +98,7 @@ class BackgroundService {
       const blob = await response.blob();
 
       // blobを直接data URLに変換
-      const dataUrl = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          resolve(reader.result as string);
-        };
-        reader.onerror = () => {
-          reject(new Error("FileReader error"));
-        };
-        reader.readAsDataURL(blob);
-      });
+      const dataUrl = await this.blobToDataUrl(blob);
 
       // ファイル名をデコード
       const decodedFilename = decodeURIComponent(payload.filename);
@@ -157,6 +148,10 @@ class BackgroundService {
     const blob = await response.blob();
 
     // blobをbase64に変換して渡す
+    return this.blobToDataUrl(blob);
+  }
+
+  private async blobToDataUrl(blob: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {

@@ -1,49 +1,44 @@
 import { ModalState, IllustInfo } from "../../types";
+import { BaseStateManager } from "../services/core/ContentStateManager";
 
-export class ModalStateManager {
-  private state: ModalState = {
-    isOpen: false,
-    currentIllust: null,
-    images: [],
-    isLoading: false,
-    error: null,
-  };
-
-  getState(): ModalState {
-    return { ...this.state };
+export class ModalStateManager extends BaseStateManager<ModalState> {
+  constructor() {
+    super({
+      isOpen: false,
+      currentIllust: null,
+      images: [],
+      isLoading: false,
+      error: null,
+    });
   }
 
-  updateState(updates: Partial<ModalState>): void {
-    this.state = { ...this.state, ...updates };
-  }
-
-  setLoading(isLoading: boolean): void {
-    this.state.isLoading = isLoading;
-  }
-
-  setError(error: string | null): void {
-    this.state.error = error;
-  }
-
-  setOpen(isOpen: boolean): void {
-    this.state.isOpen = isOpen;
-  }
-
-  setCurrentIllust(illust: IllustInfo): void {
-    this.state.currentIllust = illust;
-  }
-
-  setImages(images: string[]): void {
-    this.state.images = images;
-  }
-
-  reset(): void {
-    this.state = {
+  protected getInitialState(): ModalState {
+    return {
       isOpen: false,
       currentIllust: null,
       images: [],
       isLoading: false,
       error: null,
     };
+  }
+
+  setLoading(isLoading: boolean): void {
+    this.updateState({ isLoading });
+  }
+
+  setError(error: string | null): void {
+    this.updateState({ error });
+  }
+
+  setOpen(isOpen: boolean): void {
+    this.updateState({ isOpen });
+  }
+
+  setCurrentIllust(illust: IllustInfo): void {
+    this.updateState({ currentIllust: illust });
+  }
+
+  setImages(images: string[]): void {
+    this.updateState({ images });
   }
 }

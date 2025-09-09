@@ -1,7 +1,7 @@
-import { ExtendedWindow } from "../../types";
 import { ModalView } from "./ModalView";
 import { ModalService } from "./ModalService";
 import { ModalStateManager } from "./ModalStateManager";
+import { registerModalManager } from "../services/core/ContentStateManager";
 import "../../styles/main.css";
 
 export class ModalManager {
@@ -14,7 +14,7 @@ export class ModalManager {
     this.view = new ModalView(this.service);
     this.stateManager = new ModalStateManager();
 
-    (window as ExtendedWindow).modalManager = this;
+    registerModalManager(this);
   }
 
   async loadSettings() {
@@ -57,7 +57,7 @@ export class ModalManager {
     const modalElement = this.view.render(state);
 
     if (state.isOpen) {
-      (window as ExtendedWindow).modalManager = this;
+      registerModalManager(this);
       document.body.appendChild(modalElement);
 
       this.view.attachEventListeners(

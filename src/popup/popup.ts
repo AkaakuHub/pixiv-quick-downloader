@@ -1,21 +1,20 @@
-import { ExtensionSettings, FilenameFormat } from "../types";
+import { FilenameFormat } from "../types";
 import { I18n } from "../i18n";
+import { SettingsManager } from "../content/services/core/ContentStateManager";
 import "../styles/main.css";
 
 class PopupManager {
-  private settings: ExtensionSettings;
+  private settingsManager: SettingsManager;
   private i18n: I18n;
 
   constructor() {
-    this.settings = {
-      filenameFormat: "title_page",
-    };
+    this.settingsManager = new SettingsManager();
     this.i18n = I18n.getInstance();
     this.init();
   }
 
   private async init() {
-    await this.loadSettings();
+    await this.settingsManager.loadSettings();
     this.setupEventListeners();
     this.updateUI();
     this.updateUIText();
@@ -24,15 +23,18 @@ class PopupManager {
   private setupEventListeners() {
     // 設定変更時のリアルタイム更新と自動保存
     document.getElementById("filenameFormat")?.addEventListener("change", async e => {
-      this.settings.filenameFormat = (e.target as HTMLSelectElement).value as FilenameFormat;
-      await this.saveSettings();
+      this.settingsManager.updateSettings({
+        filenameFormat: (e.target as HTMLSelectElement).value as FilenameFormat,
+      });
+      await this.settingsManager.saveSettings(this.settingsManager.getSettings());
     });
   }
 
   private updateUI() {
     const filenameFormatSelect = document.getElementById("filenameFormat") as HTMLSelectElement;
 
-    if (filenameFormatSelect) filenameFormatSelect.value = this.settings.filenameFormat;
+    if (filenameFormatSelect)
+      filenameFormatSelect.value = this.settingsManager.getSettings().filenameFormat;
   }
 
   private updateUIText() {
@@ -69,39 +71,14 @@ class PopupManager {
   }
 
   public async loadSettings() {
-    try {
-      const response = await chrome.runtime.sendMessage({ type: "GET_SETTINGS" });
-
-      if (response.success && response.data) {
-        const loadedSettings = response.data;
-
-        // 型安全な設定マージ
-        if (loadedSettings.filenameFormat !== undefined) {
-          this.settings.filenameFormat = loadedSettings.filenameFormat as FilenameFormat;
-        }
-      } else {
-        console.error("Popup: Failed to load settings - response:", response);
-      }
-    } catch (error) {
-      console.error("Popup: Error loading settings:", error);
-    }
+    await this.settingsManager.loadSettings();
   }
 
   private async saveSettings() {
     try {
-      const response = await chrome.runtime.sendMessage({
-        type: "UPDATE_SETTINGS",
-        payload: this.settings,
-      });
-
-      if (response.success) {
-        this.showStatus(this.i18n.t("settingsSaved"), "success");
-
-        // モーダルが開いている場合に設定を再読み込みさせるためのイベントを発火
-        this.notifySettingsChanged();
-      } else {
-        this.showStatus(this.i18n.t("settingsSaveFailed"), "error");
-      }
+      await this.settingsManager.saveSettings(this.settingsManager.getSettings());
+      this.showStatus(this.i18n.t("settingsSaved"), "success");
+      this.notifySettingsChanged();
     } catch (error) {
       console.error("Failed to save settings:", error);
       this.showStatus(this.i18n.t("settingsSaveFailed"), "error");
