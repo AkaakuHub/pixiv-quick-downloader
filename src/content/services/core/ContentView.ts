@@ -1,9 +1,9 @@
-import { ExtendedWindow } from "../../types";
 import { IButtonFactory } from "./ButtonFactory";
 import { IDomElementFinder } from "./DomElementFinder";
 import { IUrlParser } from "./UrlParser";
-import { ModalManager } from "../modal";
 import { IDownloadHandler } from "./DownloadHandler";
+import { ModalManager } from "../../modal";
+import { ExtendedWindow } from "../../../types";
 
 export interface IContentView {
   addDownloadButtons(): void;

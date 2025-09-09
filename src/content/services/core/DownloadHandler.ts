@@ -1,4 +1,4 @@
-import { ModalManager } from "../modal";
+import { ModalManager } from "../../modal";
 
 export interface IDownloadHandler {
   downloadDetailPageImage(imageUrl: string, illustId: string, pageIndex: number): Promise<void>;

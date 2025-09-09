@@ -1,13 +1,13 @@
 import { ExtendedWindow } from "../types";
 import { ModalManager } from "./modal";
-import { IPageDetector, PageDetector } from "./services/PageDetector";
-import { IDomElementFinder, DomElementFinder } from "./services/DomElementFinder";
-import { IUrlParser, UrlParser } from "./services/UrlParser";
-import { IButtonFactory, ButtonFactory } from "./services/ButtonFactory";
-import { IDomObserverManager, DomObserverManager } from "./services/DomObserverManager";
-import { IDownloadHandler, DownloadHandler } from "./services/DownloadHandler";
-import { IContentStateManager, ContentStateManager } from "./services/ContentStateManager";
-import { IContentView, ContentView } from "./services/ContentView";
+import { IPageDetector, PageDetector } from "./services/core/PageDetector";
+import { IDomElementFinder, DomElementFinder } from "./services/core/DomElementFinder";
+import { IUrlParser, UrlParser } from "./services/core/UrlParser";
+import { IButtonFactory, ButtonFactory } from "./services/core/ButtonFactory";
+import { IDomObserverManager, DomObserverManager } from "./services/core/DomObserverManager";
+import { IDownloadHandler, DownloadHandler } from "./services/core/DownloadHandler";
+import { IContentStateManager, ContentStateManager } from "./services/core/ContentStateManager";
+import { IContentView, ContentView } from "./services/core/ContentView";
 import "../styles/main.css";
 
 export class PixivDownloader {
