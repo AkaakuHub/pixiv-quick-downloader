@@ -143,7 +143,8 @@ chrome.runtime.onMessage.addListener(request => {
   if (request.type === "SETTINGS_CHANGED") {
     // モーダルマネージャーが存在する場合、設定を再読み込み
     if (downloader && downloader["modalManager"]) {
-      downloader["modalManager"].loadSettings();
+      // モーダルマネージャーの設定再読み込みはサービス経由で行う
+      downloader["modalManager"].getModalService().loadSettings();
     }
   }
   return true;

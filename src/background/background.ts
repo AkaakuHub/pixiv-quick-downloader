@@ -98,7 +98,7 @@ class BackgroundService {
       const blob = await response.blob();
 
       // blobを直接data URLに変換
-      const dataUrl = await this.blobToDataUrl(blob);
+      const dataUrl = await this.convertBlobToDataUrl(blob);
 
       // ファイル名をデコード
       const decodedFilename = decodeURIComponent(payload.filename);
@@ -148,10 +148,10 @@ class BackgroundService {
     const blob = await response.blob();
 
     // blobをbase64に変換して渡す
-    return this.blobToDataUrl(blob);
+    return this.convertBlobToDataUrl(blob);
   }
 
-  private async blobToDataUrl(blob: Blob): Promise<string> {
+  private async convertBlobToDataUrl(blob: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {

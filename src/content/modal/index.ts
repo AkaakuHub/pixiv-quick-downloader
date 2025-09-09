@@ -17,10 +17,6 @@ export class ModalManager {
     registerModalManager(this);
   }
 
-  async loadSettings() {
-    await this.service.loadSettings();
-  }
-
   getModalService(): ModalService {
     return this.service;
   }
