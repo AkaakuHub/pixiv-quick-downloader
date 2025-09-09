@@ -109,7 +109,10 @@ export class SettingsManager {
   }
 }
 
-export function registerModalManager(modalManager: any): void {
+export function registerModalManager(modalManager: {
+  openModal: (illustId: string) => Promise<void>;
+  closeModal: () => void;
+}): void {
   (window as ExtendedWindow).modalManager = modalManager;
 }
 

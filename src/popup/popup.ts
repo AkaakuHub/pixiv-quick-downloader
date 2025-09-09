@@ -26,7 +26,14 @@ class PopupManager {
       this.settingsManager.updateSettings({
         filenameFormat: (e.target as HTMLSelectElement).value as FilenameFormat,
       });
-      await this.settingsManager.saveSettings(this.settingsManager.getSettings());
+      try {
+        await this.settingsManager.saveSettings(this.settingsManager.getSettings());
+        this.showStatus(this.i18n.t("settingsSaved"), "success");
+        this.notifySettingsChanged();
+      } catch (error) {
+        console.error("Failed to save settings:", error);
+        this.showStatus(this.i18n.t("settingsSaveFailed"), "error");
+      }
     });
   }
 
@@ -67,21 +74,6 @@ class PopupManager {
     }
     if (optionAuthorIdPage) {
       optionAuthorIdPage.textContent = this.i18n.t("formatAuthorIdPage");
-    }
-  }
-
-  public async loadSettings() {
-    await this.settingsManager.loadSettings();
-  }
-
-  private async saveSettings() {
-    try {
-      await this.settingsManager.saveSettings(this.settingsManager.getSettings());
-      this.showStatus(this.i18n.t("settingsSaved"), "success");
-      this.notifySettingsChanged();
-    } catch (error) {
-      console.error("Failed to save settings:", error);
-      this.showStatus(this.i18n.t("settingsSaveFailed"), "error");
     }
   }
 
