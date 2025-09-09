@@ -43,10 +43,29 @@ export class DomObserverManager implements IDomObserverManager {
       // ボタンまたはその子要素がクリックされたかチェック
       const showAllButton = target.closest("button") as HTMLElement;
       if (showAllButton && showAllButton.textContent?.trim().includes("すべて見る")) {
-        // 遅延実行して画像の完全な読み込みを待つ
-        setTimeout(() => {
-          callback();
-        }, 1500); // 1.5秒遅延でDOM再生成に対応
+        // 短い遅延でDOMの生成を待つが、頻繁にチェックする
+        const checkInterval = 100; // 100msごとにチェック
+        const maxWaitTime = 2000; // 最大2秒待つ
+        let elapsedTime = 0;
+
+        const checkDomReady = () => {
+          elapsedTime += checkInterval;
+
+          // img-originalを持つ要素が存在するか確認
+          const hasOriginalImages =
+            document.querySelectorAll('a[href*="img-original"][target="_blank"]').length > 0;
+
+          if (hasOriginalImages || elapsedTime >= maxWaitTime) {
+            // DOMが準備完了、またはタイムアウト
+            callback();
+          } else {
+            // まだ準備できていないので続けてチェック
+            setTimeout(checkDomReady, checkInterval);
+          }
+        };
+
+        // 最初のチェックを少し遅らせて開始
+        setTimeout(checkDomReady, 400);
       }
     };
 
