@@ -39,23 +39,35 @@ export class ContentView implements IContentView {
   }
 
   addArtworkDetailButtons(): void {
+    console.log("addArtworkDetailButtons called");
     const imageContainers = this.domFinder.findDetailPageImageContainers();
-    imageContainers.forEach(container => {
-      if (container.querySelector(".pixiv-download-btn")) {
+    console.log("Found imageContainers:", imageContainers.length);
+
+    imageContainers.forEach((container, index) => {
+      console.log(`Processing container ${index}:`, container);
+
+      if (container.querySelector(".pixiv-detail-download-container")) {
+        console.log("Container already has detail download container, skipping");
         return; // すでに追加済み
       }
 
       const originalImageLink = container.querySelector('a[href*="img-original"][target="_blank"]');
+      console.log("Found originalImageLink:", !!originalImageLink);
+
       if (!originalImageLink) {
+        console.log("No original image link found, skipping container");
         return;
       }
 
       const imageUrl = originalImageLink.getAttribute("href") || "";
+      console.log("Image URL:", imageUrl);
 
       const illustId = this.urlParser.getIllustIdFromUrl(imageUrl);
       const pageIndex = this.urlParser.getPageIndexFromUrl(imageUrl);
+      console.log("Illust ID:", illustId, "Page index:", pageIndex);
 
       if (!illustId || pageIndex === null) {
+        console.log("Invalid illust ID or page index, skipping");
         return;
       }
 
@@ -63,9 +75,11 @@ export class ContentView implements IContentView {
         imageUrl,
         illustId,
         pageIndex,
-        () => this.handleDetailPageDownload(imageUrl, illustId, pageIndex)
+        (filename: string) => this.handleDetailPageDownload(imageUrl, illustId, pageIndex, filename)
       );
+      console.log("Created button:", button);
       container.appendChild(button);
+      console.log("Button appended to container");
     });
   }
 
@@ -74,11 +88,16 @@ export class ContentView implements IContentView {
     buttonsToRemove.forEach(btn => btn.remove());
   }
 
-  private handleDetailPageDownload(imageUrl: string, illustId: string, pageIndex: number): void {
+  private handleDetailPageDownload(
+    imageUrl: string,
+    illustId: string,
+    pageIndex: number,
+    filename?: string
+  ): void {
     // モーダルマネージャーをグローバルに登録
     registerModalManager(this.modalManager);
 
     // 直接ダウンロード処理を呼び出し
-    this.downloadHandler.downloadDetailPageImage(imageUrl, illustId, pageIndex);
+    this.downloadHandler.downloadDetailPageImage(imageUrl, illustId, pageIndex, filename);
   }
 }

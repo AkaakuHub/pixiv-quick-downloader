@@ -50,8 +50,7 @@
   z-index: 1000 !important;
   transition: all 0.2s ease !important;
   border: 2px solid rgba(255, 255, 255, 0.3) !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  pointer-events: auto !important;
 }
 
 .pixiv-download-btn:hover {
@@ -65,40 +64,63 @@
 }
 
 /* Detail Page Download Button Styles */
-.pixiv-detail-download-btn {
+.pixiv-detail-download-container {
   position: absolute !important;
   top: 50% !important;
-  left: -40px !important;
+  left: -180px !important;
   transform: translateY(-50%) !important;
-  background: rgba(0, 150, 250, 0.9) !important;
-  color: white !important;
-  border-radius: 50% !important;
-  width: 32px !important;
-  height: 32px !important;
   display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
+  gap: 4px !important;
   z-index: 1000 !important;
-  transition: all 0.2s ease !important;
-  border: 2px solid rgba(255, 255, 255, 0.3) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
 .pixiv-detail-download-btn:hover {
   background: rgba(0, 150, 250, 1) !important;
-  transform: translateY(-50%) scale(1.1) !important;
+  transform: scale(1.1) !important;
 }
 
 .pixiv-detail-container {
   position: relative !important;
 }
 
+/* Detail Page Filename Input Styles */
+.pixiv-detail-filename-input {
+  width: 140px !important;
+  padding: 6px 8px !important;
+  border: 1px solid var(--border-secondary) !important;
+  border-radius: 6px !important;
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  font-size: 11px !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+  box-sizing: border-box !important;
+}
+
+.pixiv-detail-filename-input:focus {
+  outline: none !important;
+  border-color: var(--accent) !important;
+  background: var(--bg-primary) !important;
+  box-shadow: 0 0 0 2px rgba(0, 150, 250, 0.2) !important;
+}
+
+.pixiv-detail-filename-input::placeholder {
+  color: var(--text-tertiary) !important;
+  font-size: 10px !important;
+  opacity: 0.8 !important;
+}
+
 /* Responsive adjustments for detail page buttons */
 @media (max-width: 768px) {
+  .pixiv-detail-download-container {
+    left: -160px !important;
+  }
+  
   .pixiv-detail-download-btn {
-    left: -30px !important;
     width: 28px !important;
     height: 28px !important;
   }
@@ -106,6 +128,11 @@
   .pixiv-detail-download-btn svg {
     width: 16px !important;
     height: 16px !important;
+  }
+  
+  .pixiv-detail-filename-input {
+    width: 120px !important;
+    font-size: 10px !important;
   }
 }
 
