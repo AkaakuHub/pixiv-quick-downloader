@@ -73,18 +73,13 @@ export class ContentStateManager
 export class SettingsManager {
   private settings: ExtensionSettings = {
     filenameFormat: "title_page",
-    downloadDirectory: "pixiv_downloads",
-    autoDownload: false,
-    includeArtistId: false,
-    includePageNumber: false,
-    sanitizeFilename: true,
   };
 
   async loadSettings(): Promise<void> {
     try {
-      const response = await chrome.runtime.sendMessage({ type: "GET_SETTINGS" });
-      if (response.success && response.data) {
-        this.updateSettings(response.data);
+      const result = await chrome.storage.sync.get("settings");
+      if (result.settings) {
+        this.updateSettings(result.settings);
       }
     } catch (error) {
       console.error("Failed to load settings:", error);

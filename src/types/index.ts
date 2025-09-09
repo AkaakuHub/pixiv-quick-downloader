@@ -33,11 +33,6 @@ export type FilenameFormat = "title_page" | "id_page" | "author_title_page" | "a
 // Extension Settings
 export interface ExtensionSettings {
   filenameFormat: FilenameFormat;
-  downloadDirectory?: string;
-  autoDownload?: boolean;
-  includeArtistId?: boolean;
-  includePageNumber?: boolean;
-  sanitizeFilename?: boolean;
 }
 
 export interface FetchImagePayload {

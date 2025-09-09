@@ -52,8 +52,9 @@ class BackgroundService {
 
         case "UPDATE_SETTINGS": {
           const newSettings = request.payload as Partial<ExtensionSettings>;
-          if (newSettings.filenameFormat !== undefined)
+          if (newSettings.filenameFormat !== undefined) {
             this.settings.filenameFormat = newSettings.filenameFormat as FilenameFormat;
+          }
           await this.saveSettings();
           sendResponse({ success: true });
           break;
@@ -121,9 +122,9 @@ class BackgroundService {
     const result = await chrome.storage.sync.get("settings");
     if (result.settings) {
       const loadedSettings = result.settings as ExtensionSettings;
-      // 型安全な設定マージ
-      if (loadedSettings.filenameFormat !== undefined)
+      if (loadedSettings.filenameFormat !== undefined) {
         this.settings.filenameFormat = loadedSettings.filenameFormat as FilenameFormat;
+      }
     }
   }
 

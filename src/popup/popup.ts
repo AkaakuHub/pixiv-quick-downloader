@@ -1,14 +1,14 @@
 import { FilenameFormat } from "../types";
 import { I18n } from "../i18n";
-import { SettingsManager } from "../content/services/core/ContentStateManager";
+import { PopupSettingsManager } from "./PopupSettingsManager";
 import "../styles/main.css";
 
 class PopupManager {
-  private settingsManager: SettingsManager;
+  private settingsManager: PopupSettingsManager;
   private i18n: I18n;
 
   constructor() {
-    this.settingsManager = new SettingsManager();
+    this.settingsManager = new PopupSettingsManager();
     this.i18n = I18n.getInstance();
     this.init();
   }
