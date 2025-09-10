@@ -52,6 +52,19 @@ export class DomObserverManager implements IDomObserverManager {
       }
     };
 
+    // 即時チェックを実行
+    checkShowAllButton();
+
+    // 1枚画像ページの場合は即座にコールバックを実行
+    if (!hasShowAllButton) {
+      console.log(
+        "[Pixiv Quick Downloader]  Single image page detected, executing callback immediately"
+      );
+      setTimeout(() => {
+        callback();
+      }, 500); // 少し待ってから実行
+    }
+
     // DOMの変更を監視してボタンの存在を再チェック
     this.buttonObserver = new MutationObserver(() => {
       checkShowAllButton();
@@ -72,7 +85,7 @@ export class DomObserverManager implements IDomObserverManager {
     const handleInteraction = (event: Event) => {
       const target = event.target as HTMLElement;
 
-      // トリガー1: 「すべて見る」ボタン
+      // トリガー1: 「すべて見る」ボタン（複数画像ページ用）
       if (hasShowAllButton) {
         const showAllButton = target.closest("button") as HTMLElement;
         if (showAllButton && showAllButton.textContent?.trim().includes("すべて見る")) {
@@ -81,7 +94,7 @@ export class DomObserverManager implements IDomObserverManager {
         }
       }
 
-      // トリガー2: 画像コンテナのクリック（img要素から上のdiv）
+      // トリガー2: 画像コンテナのクリック（複数画像・1枚画像ページ共通）
       const clickedImage = target.closest("img") as HTMLElement;
       if (clickedImage) {
         // 画像の親要素をたどって詳細ページコンテナを探す
