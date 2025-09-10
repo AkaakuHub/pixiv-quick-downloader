@@ -1,3 +1,5 @@
+import { I18n } from "../../../i18n/i18n";
+
 export interface IDomObserverManager {
   setupObserver(callback: () => void): void;
   setupShowAllButtonObserver(callback: () => void): void;
@@ -11,6 +13,13 @@ export class DomObserverManager implements IDomObserverManager {
   private showAllClickHandler: ((event: Event) => void) | null = null;
   private isProcessing = false; // 重複実行防止フラグ
   private lastProcessTime = 0; // 最後の処理時間
+  private i18n: I18n;
+  private showAllButtonLabel: string;
+
+  constructor() {
+    this.i18n = I18n.getInstance();
+    this.showAllButtonLabel = this.i18n.t("showAllButtonLabel");
+  }
 
   setupObserver(callback: () => void): void {
     // DOMの変更を監視して、新しいカードにボタンを追加
@@ -48,7 +57,8 @@ export class DomObserverManager implements IDomObserverManager {
       if (buttons.length > 12) {
         const specificButton = buttons[12];
         const specificDiv = specificButton.querySelectorAll("div")[1];
-        hasShowAllButton = specificDiv?.textContent?.trim().includes("すべて見る") || false;
+        hasShowAllButton =
+          specificDiv?.textContent?.trim().includes(this.showAllButtonLabel) || false;
       }
     };
 
@@ -84,7 +94,7 @@ export class DomObserverManager implements IDomObserverManager {
       // トリガー1: 「すべて見る」ボタン（複数画像ページ用）
       if (hasShowAllButton) {
         const showAllButton = target.closest("button") as HTMLElement;
-        if (showAllButton && showAllButton.textContent?.trim().includes("すべて見る")) {
+        if (showAllButton && showAllButton.textContent?.trim().includes(this.showAllButtonLabel)) {
           this.triggerDomUpdate(callback);
           return;
         }

@@ -170,4 +170,13 @@ export const translations: Translations = {
     "zh-HK": "儲存設定失敗",
     ko: "설정 저장에 실패했습니다",
   },
+  showAllButtonLabel: {
+    en: "Show all",
+    ja: "すべて見る",
+    zh: "查看全部",
+    "zh-CN": "查看全部",
+    "zh-TW": "查看全部",
+    "zh-HK": "查看全部",
+    ko: "모두 보기",
+  },
 };
