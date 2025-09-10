@@ -6,6 +6,7 @@ export interface IDomObserverManager {
 
 export class DomObserverManager implements IDomObserverManager {
   private observer: MutationObserver | null = null;
+  private buttonObserver: MutationObserver | null = null;
   private showAllClickHandler: ((event: Event) => void) | null = null;
   private isProcessing = false; // 重複実行防止フラグ
   private lastProcessTime = 0; // 最後の処理時間
@@ -38,15 +39,48 @@ export class DomObserverManager implements IDomObserverManager {
   }
 
   setupShowAllButtonObserver(callback: () => void): void {
+    let hasShowAllButton = false;
+
+    // DOMが完全に読み込まれた後に「すべて見る」ボタンの存在を確認
+    const checkShowAllButton = () => {
+      const buttons = document.querySelectorAll("button");
+      if (buttons.length > 12) {
+        const specificButton = buttons[12];
+        console.log("[DomObserverManager] Specific button for 'Show All' check:", specificButton);
+        const specificDiv = specificButton.querySelectorAll("div")[1];
+        hasShowAllButton = specificDiv?.textContent?.trim().includes("すべて見る") || false;
+        console.log("[DomObserverManager] Show All button presence:", hasShowAllButton);
+      }
+    };
+
+    // 初期チェックはしない
+    // DOMの変更を監視してボタンの存在を再チェック
+    this.buttonObserver = new MutationObserver(() => {
+      checkShowAllButton();
+      // ボタンが見つかったら監視を停止
+      if (hasShowAllButton) {
+        this.buttonObserver?.disconnect();
+        this.buttonObserver = null;
+        console.log("[DomObserverManager] Show All button found, stopping observation");
+      }
+    });
+
+    this.buttonObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
     // 複数のトリガーを監視
     const handleInteraction = (event: Event) => {
       const target = event.target as HTMLElement;
 
       // トリガー1: 「すべて見る」ボタン
-      const showAllButton = target.closest("button") as HTMLElement;
-      if (showAllButton && showAllButton.textContent?.trim().includes("すべて見る")) {
-        this.triggerDomUpdate(callback);
-        return;
+      if (hasShowAllButton) {
+        const showAllButton = target.closest("button") as HTMLElement;
+        if (showAllButton && showAllButton.textContent?.trim().includes("すべて見る")) {
+          this.triggerDomUpdate(callback);
+          return;
+        }
       }
 
       // トリガー2: 画像コンテナのクリック（img要素から上のdiv）
@@ -107,6 +141,11 @@ export class DomObserverManager implements IDomObserverManager {
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;
+    }
+
+    if (this.buttonObserver) {
+      this.buttonObserver.disconnect();
+      this.buttonObserver = null;
     }
 
     // 'Show All' button observerのクリーンアップ

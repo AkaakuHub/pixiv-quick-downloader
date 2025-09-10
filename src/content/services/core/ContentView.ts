@@ -65,9 +65,7 @@ export class ContentView implements IContentView {
         pageIndex,
         (filename: string) => this.handleDetailPageDownload(imageUrl, illustId, pageIndex, filename)
       );
-      console.log("Created button:", button);
       container.appendChild(button);
-      console.log("Button appended to container");
     });
   }
 
