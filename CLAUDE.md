@@ -16,6 +16,7 @@ A Chrome extension for downloading images from pixiv search results pages.
 - コメントアウトは必要最低限にすること
 - ビジネスロジックとUIの分離が必要
 - 不要なdiffは禁止
+- 無駄なポーリングしないこと
 
 # 重要
 何かを実装する前に、事前に必ず重複した機能が既にないかどうか確認すること。むやみに新しいファイルを作成しないこと。共通の関数などは既存のものを使うこと。
