@@ -40,16 +40,16 @@ export class DomObserverManager implements IDomObserverManager {
 
   setupShowAllButtonObserver(callback: () => void): void {
     let hasShowAllButton = false;
+    let checkCount = 0;
+    const maxChecks = 4;
 
     // DOMが完全に読み込まれた後に「すべて見る」ボタンの存在を確認
     const checkShowAllButton = () => {
       const buttons = document.querySelectorAll("button");
       if (buttons.length > 12) {
         const specificButton = buttons[12];
-        console.log("[DomObserverManager] Specific button for 'Show All' check:", specificButton);
         const specificDiv = specificButton.querySelectorAll("div")[1];
         hasShowAllButton = specificDiv?.textContent?.trim().includes("すべて見る") || false;
-        console.log("[DomObserverManager] Show All button presence:", hasShowAllButton);
       }
     };
 
@@ -57,11 +57,21 @@ export class DomObserverManager implements IDomObserverManager {
     // DOMの変更を監視してボタンの存在を再チェック
     this.buttonObserver = new MutationObserver(() => {
       checkShowAllButton();
+      checkCount++;
+
       // ボタンが見つかったら監視を停止
       if (hasShowAllButton) {
         this.buttonObserver?.disconnect();
         this.buttonObserver = null;
-        console.log("[DomObserverManager] Show All button found, stopping observation");
+        console.log("[Pixiv Quick Downloader] 'Show All' button detected");
+      } else if (checkCount >= maxChecks) {
+        // 4回チェックしても見つからない場合はcallbackを実行
+        this.buttonObserver?.disconnect();
+        this.buttonObserver = null;
+        console.log(
+          "[Pixiv Quick Downloader] 'Show All' button not found after 4 checks, executing callback"
+        );
+        callback();
       }
     });
 
