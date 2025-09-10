@@ -124,9 +124,15 @@ export class ModalView {
           <div class="pixiv-instruction-text">
           ${this.i18n.t("clickToDownload")}
           </div>
+        ${
+          state.images.length > 1
+            ? `
           <div class="pixiv-instruction-subtext">
           ${this.i18n.t("or")}
           </div>
+        `
+            : ""
+        }
         </div>
         ${
           state.images.length > 1
