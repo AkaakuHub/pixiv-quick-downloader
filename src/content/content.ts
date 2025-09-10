@@ -152,3 +152,4 @@ chrome.runtime.onMessage.addListener(request => {
 
 // 初期化実行
 initExtension();
+console.log("[Pixiv Quick Downloader] Script initialized");

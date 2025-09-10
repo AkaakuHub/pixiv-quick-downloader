@@ -17,6 +17,7 @@ export class SearchPageSelector implements IIllustInfoSelector {
       }
 
       if (!targetCard) {
+        console.warn(`Target card not found for illustId: ${illustId}`);
         return {
           id: illustId,
           title: `作品 ${illustId}`,
@@ -34,6 +35,8 @@ export class SearchPageSelector implements IIllustInfoSelector {
         if (titleLink && titleLink.textContent) {
           title = titleLink.textContent.trim();
         }
+      } else {
+        console.warn(`Title link not found for illustId: ${illustId}`);
       }
 
       // ユーザー名を取得 - hrefに/users/を含むaタグから
@@ -43,6 +46,8 @@ export class SearchPageSelector implements IIllustInfoSelector {
         const userElement = userElements[0] as HTMLElement;
         const userDiv = userElement.querySelector("div") as HTMLElement;
         userName = userDiv?.title?.trim() || "Unknown User";
+      } else {
+        console.warn(`User link not found for illustId: ${illustId}`);
       }
 
       // ページ数を取得 - aria-labelからページ数を抽出
