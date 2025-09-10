@@ -4,14 +4,18 @@ pre-commit:
     - name: type check
       run: pnpm type-check
       glob: "*.{ts,tsx}"
+      stage_fixed: true
 
     - name: format
       run: pnpm format
       glob: "*.{ts,tsx,html,json}"
+      stage_fixed: true
 
     - name: lint
       run: pnpm lint
       glob: "*.{ts,tsx}"
+      stage_fixed: true
 
     - name: knip check
       run: pnpm knip
+      stage_fixed: true
