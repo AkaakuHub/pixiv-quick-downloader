@@ -158,6 +158,13 @@
   }
 }
 
+.pixiv-logged-out-label{
+  color: var(--error) !important;
+  font-weight: bold !important;
+  margin-top: 30px !important;
+  margin-bottom: 15px !important;
+}
+
 .pixiv-modal-container-wrapper {
   position: fixed !important;
   top: 0 !important;

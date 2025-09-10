@@ -88,6 +88,7 @@ export class PixivDownloader {
       // 詳細ページの場合のみ実行
       if (this.stateManager.getState().currentPageType === "detail") {
         this.contentView.addArtworkDetailButtons();
+        this.contentView.addLoggedOutLabel();
       }
     });
   }
