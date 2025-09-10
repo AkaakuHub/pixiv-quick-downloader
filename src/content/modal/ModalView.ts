@@ -18,22 +18,7 @@ export class ModalView {
     }
 
     this.modal = document.createElement("div");
-    this.modal.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 10000;
-      overflow-y: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      padding: 0;
-    `;
+    this.modal.className = "pixiv-modal-container-wrapper";
 
     if (state.isOpen) {
       this.modal.innerHTML = this.getModalHTML(state);

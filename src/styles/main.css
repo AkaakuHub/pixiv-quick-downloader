@@ -141,21 +141,39 @@
   .pixiv-detail-download-container {
     left: -160px !important;
   }
-  
+
   .pixiv-detail-download-btn {
     width: 28px !important;
     height: 28px !important;
   }
-  
+
   .pixiv-detail-download-btn svg {
     width: 16px !important;
     height: 16px !important;
   }
-  
+
   .pixiv-detail-filename-input {
     width: 120px !important;
     font-size: 10px !important;
   }
+}
+
+.pixiv-modal-container-wrapper {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  z-index: 10000;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  padding: 0;
+  animation: pixivFadeIn 0.3s ease forwards;
 }
 
 /* Modal Container */
@@ -169,8 +187,8 @@
   max-height: 95vh !important;
   overflow-y: auto !important;
   position: relative !important;
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8), 
-              0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.05) !important;
   border: 1px solid var(--border-primary) !important;
   backdrop-filter: blur(10px) !important;
 }
@@ -247,12 +265,11 @@
   gap: 12px !important;
 }
 
-.pixiv-instruction-text{
+.pixiv-instruction-text {
   font-size: 14px !important;
 }
 
-.pixiv-instruct
-ion-subtext{
+.pixiv-instruct ion-subtext {
   font-size: 12px !important;
 }
 
@@ -418,13 +435,23 @@ ion-subtext{
 }
 
 @keyframes pixiv-spin {
-  0% { transform: rotate(0deg) !important; }
-  100% { transform: rotate(360deg) !important; }
+  0% {
+    transform: rotate(0deg) !important;
+  }
+
+  100% {
+    transform: rotate(360deg) !important;
+  }
 }
 
 @keyframes pixivFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* Error State */
@@ -473,28 +500,28 @@ ion-subtext{
     padding: 16px !important;
     width: 95vw !important;
   }
-  
+
   .pixiv-images-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
     gap: 16px !important;
   }
-  
+
   .pixiv-image-wrapper {
     height: 150px !important;
   }
-  
+
   .pixiv-modal-header {
     flex-direction: column !important;
     gap: 12px !important;
     text-align: center !important;
   }
-  
+
   .pixiv-title {
     white-space: normal !important;
     overflow: visible !important;
     text-overflow: clip !important;
   }
-  
+
   .pixiv-close-btn {
     align-self: flex-end !important;
     margin-left: 0 !important;
@@ -520,12 +547,12 @@ ion-subtext{
     padding: 12px !important;
     width: 98vw !important;
   }
-  
+
   .pixiv-images-grid {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
-  
+
   .pixiv-image-wrapper {
     height: 180px !important;
   }
