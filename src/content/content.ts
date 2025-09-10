@@ -43,44 +43,31 @@ export class PixivDownloader {
   }
 
   private init(): void {
-    console.log("[PixivDownloader] Initializing extension...");
-    console.log("[PixivDownloader] Current URL:", window.location.href);
-
     // ページタイプを検出
     const pathname = window.location.pathname;
     const pageType = this.pageDetector.detectPageType(pathname);
-    console.log("[PixivDownloader] Detected page type:", pageType);
     this.stateManager.setPageType(pageType);
 
     // ページタイプに応じて初期化
     if (pageType === "detail") {
-      console.log("[PixivDownloader] Detail page detected - will wait for 'show all' button");
       // 詳細ページは「すべて見る」ボタンクリック時にボタンを追加
     } else if (pageType === "search") {
-      console.log("[PixivDownloader] Search page detected - adding download buttons immediately");
       this.contentView.addDownloadButtons();
     }
 
     // DOM監視を設定
-    console.log("[PixivDownloader] Setting up observers...");
     this.setupObservers();
 
     // グローバルに公開（モーダル内からの呼び出し用）
     registerModalManager(this.modalManager);
 
     this.stateManager.setIsInitialized(true);
-    console.log("[PixivDownloader] Initialization complete");
   }
 
   private setupObservers(): void {
-    console.log("[PixivDownloader] Setting up DOM observer...");
     // DOM変更監視
     this.observerManager.setupObserver(() => {
       const state = this.stateManager.getState();
-      console.log(
-        "[PixivDownloader] DOM observer callback triggered, isDestroyed:",
-        state.isDestroyed
-      );
       if (state.isDestroyed) return;
 
       // 遅延実行してDOMの完全な読み込みを待つ
@@ -89,28 +76,20 @@ export class PixivDownloader {
 
         // 検索ページの場合のみ自動実行（詳細ページは「すべて見る」ボタンクリックで実行）
         if (this.stateManager.getState().currentPageType === "search") {
-          console.log("[PixivDownloader] Adding download buttons for search page");
           this.contentView.addDownloadButtons();
         }
       }, 10); // イラストDOMが完全に追加されるまで少し待つ
     });
 
-    console.log("[PixivDownloader] Setting up show-all button observer...");
     // 「すべて見る」ボタン監視（SPA対応で即時チェックを実行）
     this.observerManager.setupShowAllButtonObserver(() => {
-      console.log("[PixivDownloader] Show-all button observer callback triggered");
       if (this.stateManager.getState().isDestroyed) return;
 
       // 詳細ページの場合のみ実行
       if (this.stateManager.getState().currentPageType === "detail") {
-        console.log("[PixivDownloader] Adding artwork detail buttons for detail page");
         this.contentView.addArtworkDetailButtons();
-      } else {
-        console.log("[PixivDownloader] Not a detail page, skipping detail buttons");
       }
     });
-
-    console.log("[PixivDownloader] Observers setup complete");
   }
 
   destroy(): void {
@@ -225,7 +204,6 @@ function checkForPixivElements() {
   // pixiv特有の要素が変更されたかチェック
   const currentArtworkId = extractArtworkId();
   if (currentArtworkId && currentArtworkId !== lastArtworkId) {
-    console.log("[Pixiv Quick Downloader] Artwork ID changed:", currentArtworkId);
     checkUrlChange();
   }
 }
@@ -252,7 +230,6 @@ function checkUrlChange() {
 
   const currentUrl = location.href;
   if (currentUrl !== lastUrl) {
-    console.log("[Pixiv Quick Downloader] URL changed detected:", currentUrl);
     handleUrlChange(currentUrl);
   }
 }
@@ -264,13 +241,8 @@ function handleUrlChange(currentUrl: string) {
   lastUrl = currentUrl;
   lastArtworkId = extractArtworkId();
 
-  console.log("[Pixiv Quick Downloader] URL change detected:", currentUrl);
-  console.log("[Pixiv Quick Downloader] Previous URL:", lastUrl);
-  console.log("[Pixiv Quick Downloader] Extracted artwork ID:", lastArtworkId);
-
   // 前のダウンローダーを破棄
   if (downloader) {
-    console.log("[Pixiv Quick Downloader] Destroying existing downloader...");
     downloader.destroy();
     downloader = null;
   }
@@ -282,13 +254,10 @@ function handleUrlChange(currentUrl: string) {
   }
 
   // DOMのクリーンアップ - 既存の要素を削除
-  console.log("[Pixiv Quick Downloader] Cleaning up existing elements...");
   cleanupExistingElements();
 
   // 少し待ってから再初期化（DOMの完全な読み込みを待つ）
-  console.log("[Pixiv Quick Downloader] Scheduling reinitialization in 300ms...");
   navigationTimer = window.setTimeout(() => {
-    console.log("[Pixiv Quick Downloader] Reinitializing extension...");
     isProcessing = false;
     initExtension();
   }, 300); // 800msから300msに短縮して即時実行
@@ -296,8 +265,6 @@ function handleUrlChange(currentUrl: string) {
 
 // 既存の要素をクリーンアップする関数
 function cleanupExistingElements() {
-  console.log("[Pixiv Quick Downloader] Cleaning up existing elements...");
-
   // ダウンロードボタンを削除
   const existingButtons = document.querySelectorAll(".pixiv-download-btn");
   existingButtons.forEach(btn => btn.remove());
@@ -305,8 +272,6 @@ function cleanupExistingElements() {
   // モーダルを削除
   const existingModals = document.querySelectorAll(".pixiv-download-modal");
   existingModals.forEach(modal => modal.remove());
-
-  console.log("[Pixiv Quick Downloader] Cleanup completed");
 }
 
 // 6. 定期的な作品IDチェック（最終手段として）

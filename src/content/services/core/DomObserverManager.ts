@@ -57,9 +57,6 @@ export class DomObserverManager implements IDomObserverManager {
 
     // 1枚画像ページの場合は即座にコールバックを実行
     if (!hasShowAllButton) {
-      console.log(
-        "[Pixiv Quick Downloader]  Single image page detected, executing callback immediately"
-      );
       setTimeout(() => {
         callback();
       }, 500); // 少し待ってから実行
@@ -72,7 +69,6 @@ export class DomObserverManager implements IDomObserverManager {
       if (hasShowAllButton) {
         this.buttonObserver?.disconnect();
         this.buttonObserver = null;
-        console.log("[Pixiv Quick Downloader] 'Show All' button detected");
       }
     });
 
@@ -147,8 +143,6 @@ export class DomObserverManager implements IDomObserverManager {
   }
 
   destroy(): void {
-    console.log("[Pixiv Quick Downloader]  Destroying observers...");
-
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;
@@ -169,13 +163,10 @@ export class DomObserverManager implements IDomObserverManager {
     // 状態フラグをリセット
     this.isProcessing = false;
     this.lastProcessTime = 0;
-
-    console.log("[Pixiv Quick Downloader]  Observers destroyed");
   }
 
   // SPAナビゲーション用の強制リセット
   forceReset(): void {
-    console.log("[Pixiv Quick Downloader]  Force resetting observers...");
     this.destroy();
   }
 }
