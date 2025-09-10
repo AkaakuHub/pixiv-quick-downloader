@@ -22,7 +22,22 @@ export class DomElementFinder implements IDomElementFinder {
     return [];
   }
 
+  // ログイン状態チェック
+  private checkIsLoggedIn(): boolean {
+    // ログアウト状態の判定: 「アカウントを作成」ボタンが存在するか
+    const buttons = document.querySelectorAll("button.charcoal-button");
+    for (const button of Array.from(buttons)) {
+      if (button.textContent?.trim() === "アカウントを作成") {
+        return true; // ログアウト状態
+      }
+    }
+    return false; // ログイン状態
+  }
+
   findDetailPageImageContainers(): HTMLElement[] {
+    const isLoggedIn = !this.checkIsLoggedIn();
+    console.log("User logged in status:", isLoggedIn);
+
     // 詳細ページ用の安定したセレクタ（確定要素のみを使用）
     const selector = 'div[role="presentation"]:has(a[href*="img-original"][target="_blank"])';
     const elements = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
