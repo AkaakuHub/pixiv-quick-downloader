@@ -79,8 +79,8 @@
   justify-content: center !important;
   gap: 4px !important;
   z-index: 1000 !important;
-  opacity: 1 !important;
   pointer-events: auto !important;
+  animation: pixivFadeIn 0.3s ease forwards;
 }
 
 .pixiv-detail-download-btn {
@@ -96,6 +96,7 @@
   transition: all 0.2s ease !important;
   border: 2px solid rgba(255, 255, 255, 0.3) !important;
   position: static !important;
+  animation: pixivFadeIn 0.3s ease forwards;
 }
 
 .pixiv-detail-download-btn:hover {
@@ -119,6 +120,7 @@
   text-align: center !important;
   transition: all 0.3s ease !important;
   box-sizing: border-box !important;
+  animation: pixivFadeIn 0.3s ease forwards;
 }
 
 .pixiv-detail-filename-input:focus {
@@ -418,6 +420,11 @@ ion-subtext{
 @keyframes pixiv-spin {
   0% { transform: rotate(0deg) !important; }
   100% { transform: rotate(360deg) !important; }
+}
+
+@keyframes pixivFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Error State */
