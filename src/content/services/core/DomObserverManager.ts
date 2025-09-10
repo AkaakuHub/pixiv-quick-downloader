@@ -10,6 +10,7 @@ export class DomObserverManager implements IDomObserverManager {
   private showAllClickHandler: ((event: Event) => void) | null = null;
   private isProcessing = false; // 重複実行防止フラグ
   private lastProcessTime = 0; // 最後の処理時間
+  private callbackExecuted = false; // コールバック実行済みフラグ
 
   setupObserver(callback: () => void): void {
     // DOMの変更を監視して、新しいカードにボタンを追加
@@ -63,15 +64,15 @@ export class DomObserverManager implements IDomObserverManager {
       if (hasShowAllButton) {
         this.buttonObserver?.disconnect();
         this.buttonObserver = null;
-        console.log("[Pixiv Quick Downloader] 'Show All' button detected");
       } else if (checkCount >= maxChecks) {
         // 4回チェックしても見つからない場合はcallbackを実行
         this.buttonObserver?.disconnect();
         this.buttonObserver = null;
-        console.log(
-          "[Pixiv Quick Downloader] 'Show All' button not found after 4 checks, executing callback"
-        );
-        callback();
+        // コールバックがまだ実行されていない場合のみ実行
+        if (!this.callbackExecuted) {
+          this.callbackExecuted = true;
+          callback();
+        }
       }
     });
 
@@ -121,27 +122,48 @@ export class DomObserverManager implements IDomObserverManager {
     this.isProcessing = true;
     this.lastProcessTime = now;
 
-    // 短い遅延でDOMの生成を待つが、頻繁にチェックする
-    const checkInterval = 100; // 100msごとにチェック
-    const maxWaitTime = 2000; // 最大2秒待つ
-    let elapsedTime = 0;
+    let checkCount = 0;
+    const maxChecks = 4;
+    let domObserver: MutationObserver | null = null;
 
     const checkDomReady = () => {
-      elapsedTime += checkInterval;
+      checkCount++;
 
       // img-originalを持つ要素が存在するか確認
       const hasOriginalImages =
         document.querySelectorAll('a[href*="img-original"][target="_blank"]').length > 0;
 
-      if (hasOriginalImages || elapsedTime >= maxWaitTime) {
-        // DOMが準備完了、またはタイムアウト
+      if (hasOriginalImages) {
+        // DOMが準備完了
+        if (domObserver) {
+          domObserver.disconnect();
+          domObserver = null;
+        }
         this.isProcessing = false;
-        callback();
-      } else {
-        // まだ準備できていないので続けてチェック
-        setTimeout(checkDomReady, checkInterval);
+        // コールバックがまだ実行されていない場合のみ実行
+        if (!this.callbackExecuted) {
+          this.callbackExecuted = true;
+          callback();
+        }
+      } else if (checkCount >= maxChecks) {
+        // 4回チェックしても見つからない場合は諦めて終了
+        if (domObserver) {
+          domObserver.disconnect();
+          domObserver = null;
+        }
+        this.isProcessing = false;
       }
     };
+
+    // DOMの変更を監視して画像リンクの存在を再チェック
+    domObserver = new MutationObserver(() => {
+      checkDomReady();
+    });
+
+    domObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     // 最初のチェックを少し遅らせて開始
     setTimeout(checkDomReady, 400);
@@ -168,5 +190,6 @@ export class DomObserverManager implements IDomObserverManager {
     // 状態フラグをリセット
     this.isProcessing = false;
     this.lastProcessTime = 0;
+    this.callbackExecuted = false;
   }
 }
