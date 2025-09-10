@@ -40,7 +40,6 @@ export class ContentView implements IContentView {
 
   addArtworkDetailButtons(): void {
     const imageContainers = this.domFinder.findDetailPageImageContainers();
-
     imageContainers.forEach(container => {
       // SPA対策: 既存のダウンロード要素を完全に削除
       const existingContainer = container.querySelector(".pixiv-detail-download-container");
@@ -54,16 +53,12 @@ export class ContentView implements IContentView {
       );
       existingButtons.forEach(btn => btn.remove());
 
-      // ログアウト状態でも通用するセレクタ
-      const masterImageLink = document.querySelector('img[src*="img-master"][width][height]');
-      if (!masterImageLink) {
+      const originalImageLink = container.querySelector('a[href*="img-original"][target="_blank"]');
+      if (!originalImageLink) {
         return;
       }
 
-      // ログアウト状態ではsrc属性からURLを取得
-      let imageUrl =
-        masterImageLink.getAttribute("src") || masterImageLink.getAttribute("href") || "";
-      imageUrl = imageUrl.replace("img-master", "img-original").replace(/_master\d+\./, ".");
+      const imageUrl = originalImageLink.getAttribute("href") || "";
 
       const illustId = this.urlParser.getIllustIdFromUrl(imageUrl);
       const pageIndex = this.urlParser.getPageIndexFromUrl(imageUrl);

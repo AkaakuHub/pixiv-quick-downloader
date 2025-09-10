@@ -57,8 +57,8 @@ export class DomObserverManager implements IDomObserverManager {
       if (buttons.length > 12) {
         const specificButton = buttons[12];
         const specificDiv = specificButton.querySelectorAll("div")[1];
-        const buttonText = specificDiv?.textContent?.trim();
-        hasShowAllButton = buttonText?.includes(this.showAllButtonLabel) || false;
+        hasShowAllButton =
+          specificDiv?.textContent?.trim().includes(this.showAllButtonLabel) || false;
       }
     };
 
@@ -134,11 +134,11 @@ export class DomObserverManager implements IDomObserverManager {
     const checkDomReady = () => {
       elapsedTime += checkInterval;
 
-      // img-masterを持つ要素が存在するか確認
-      const hasMasterImages =
-        document.querySelectorAll('img[src*="img-master"][width][height]').length > 0;
+      // img-originalを持つ要素が存在するか確認
+      const hasOriginalImages =
+        document.querySelectorAll('a[href*="img-original"][target="_blank"]').length > 0;
 
-      if (hasMasterImages || elapsedTime >= maxWaitTime) {
+      if (hasOriginalImages || elapsedTime >= maxWaitTime) {
         // DOMが準備完了、またはタイムアウト
         this.isProcessing = false;
         callback();
