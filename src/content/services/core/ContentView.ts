@@ -42,17 +42,17 @@ export class ContentView implements IContentView {
     const imageContainers = this.domFinder.findDetailPageImageContainers();
 
     imageContainers.forEach(container => {
-      // 親要素を辿ってDOM構造をログ
-      let parent = container.parentElement;
-      let depth = 0;
-      while (parent && depth < 5) {
-        parent = parent.parentElement;
-        depth++;
+      // SPA対策: 既存のダウンロード要素を完全に削除
+      const existingContainer = container.querySelector(".pixiv-detail-download-container");
+      if (existingContainer) {
+        existingContainer.remove();
       }
 
-      if (container.querySelector(".pixiv-detail-download-container")) {
-        return; // すでに追加済み
-      }
+      // SPA対策: 複数の要素が残っている場合も削除
+      const existingButtons = container.querySelectorAll(
+        ".pixiv-detail-download-btn, .pixiv-detail-filename-input"
+      );
+      existingButtons.forEach(btn => btn.remove());
 
       // ログアウト状態でも通用するセレクタ
       const masterImageLink = document.querySelector('img[src*="img-master"][width][height]');

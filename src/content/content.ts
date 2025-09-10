@@ -253,25 +253,30 @@ function handleUrlChange(currentUrl: string) {
     navigationTimer = null;
   }
 
-  // DOMのクリーンアップ - 既存の要素を削除
-  cleanupExistingElements();
+  // 即時クリーンアップ - SPA遷移の瞬間に要素を削除
+  immediateCleanup();
 
   // 少し待ってから再初期化（DOMの完全な読み込みを待つ）
   navigationTimer = window.setTimeout(() => {
     isProcessing = false;
     initExtension();
-  }, 300); // 800msから300msに短縮して即時実行
+  }, 100); // さらに短縮して即時実行
 }
 
-// 既存の要素をクリーンアップする関数
-function cleanupExistingElements() {
-  // ダウンロードボタンを削除
-  const existingButtons = document.querySelectorAll(".pixiv-download-btn");
-  existingButtons.forEach(btn => btn.remove());
+// 即時クリーンアップ関数
+function immediateCleanup() {
+  // 詳細ページ用の要素を即時削除
+  const detailContainers = document.querySelectorAll(".pixiv-detail-download-container");
+  const detailButtons = document.querySelectorAll(".pixiv-detail-download-btn");
+  const detailInputs = document.querySelectorAll(".pixiv-detail-filename-input");
 
-  // モーダルを削除
-  const existingModals = document.querySelectorAll(".pixiv-download-modal");
-  existingModals.forEach(modal => modal.remove());
+  detailContainers.forEach(container => container.remove());
+  detailButtons.forEach(btn => btn.remove());
+  detailInputs.forEach(input => input.remove());
+
+  // 通常のダウンロードボタンも削除
+  const regularButtons = document.querySelectorAll(".pixiv-download-btn");
+  regularButtons.forEach(btn => btn.remove());
 }
 
 // 6. 定期的な作品IDチェック（最終手段として）
