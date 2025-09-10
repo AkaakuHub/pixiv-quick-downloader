@@ -308,6 +308,12 @@
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)) !important;
   gap: 24px !important;
   justify-items: center !important;
+  justify-content: center !important;
+}
+
+/* Single image adjustment - limit max width */
+.pixiv-images-grid:has(.pixiv-image-card:only-child) {
+  grid-template-columns: minmax(360px, 500px) !important;
 }
 
 /* Image Cards */
