@@ -40,17 +40,30 @@ export class ContentView implements IContentView {
 
   addArtworkDetailButtons(): void {
     const imageContainers = this.domFinder.findDetailPageImageContainers();
+
     imageContainers.forEach(container => {
+      // 親要素を辿ってDOM構造をログ
+      let parent = container.parentElement;
+      let depth = 0;
+      while (parent && depth < 5) {
+        parent = parent.parentElement;
+        depth++;
+      }
+
       if (container.querySelector(".pixiv-detail-download-container")) {
         return; // すでに追加済み
       }
 
-      const originalImageLink = container.querySelector('a[href*="img-original"][target="_blank"]');
-      if (!originalImageLink) {
+      // ログアウト状態でも通用するセレクタ
+      const masterImageLink = document.querySelector('img[src*="img-master"][width][height]');
+      if (!masterImageLink) {
         return;
       }
 
-      const imageUrl = originalImageLink.getAttribute("href") || "";
+      // ログアウト状態ではsrc属性からURLを取得
+      let imageUrl =
+        masterImageLink.getAttribute("src") || masterImageLink.getAttribute("href") || "";
+      imageUrl = imageUrl.replace("img-master", "img-original").replace(/_master\d+\./, ".");
 
       const illustId = this.urlParser.getIllustIdFromUrl(imageUrl);
       const pageIndex = this.urlParser.getPageIndexFromUrl(imageUrl);

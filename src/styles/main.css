@@ -78,9 +78,10 @@
   align-items: center !important;
   justify-content: center !important;
   gap: 4px !important;
-  z-index: 1000 !important;
+  z-index: 999999 !important;
   pointer-events: auto !important;
   animation: pixivFadeIn 0.3s ease forwards;
+  isolation: isolate !important;
 }
 
 .pixiv-detail-download-btn {
@@ -105,7 +106,8 @@
 }
 
 .pixiv-detail-container {
-  position: relative !important;
+  /* position: relative !important; */
+  /* ログアウト状態で動くように */
 }
 
 /* Detail Page Filename Input Styles */

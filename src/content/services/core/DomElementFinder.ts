@@ -23,63 +23,43 @@ export class DomElementFinder implements IDomElementFinder {
   }
 
   findDetailPageImageContainers(): HTMLElement[] {
-    // 詳細ページ用の安定したセレクタ（確定要素のみを使用）
-    const selector = 'div[role="presentation"]:has(a[href*="img-original"][target="_blank"])';
-    const elements = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
-    if (elements.length > 0) {
-      // コンテナを適切に抽出
-      let containers: HTMLElement[] = [];
+    // ログアウト状態対応のセレクタ - img-master要素の親コンテナを探す
+    const masterImages = Array.from(
+      document.querySelectorAll('img[src*="img-master"][width][height]')
+    ) as HTMLElement[];
 
-      if (selector.includes('a[href*="img-original"]')) {
-        const containerMap = new Map<HTMLElement, boolean>();
-
-        elements.forEach(el => {
-          // リンク要素の場合、その親のpresentationコンテナを探す
-          const container = el.closest("div[role='presentation']");
-          let finalContainer: HTMLElement | null = null;
-
-          if (container) {
-            // presentationコンテナが見つかった場合、カードコンテナかどうかを確認
-            // カードコンテナはdiv[id]を持つ親要素を持つ
-            const parentContainer = container.parentElement;
-            const hasIdDiv = parentContainer && parentContainer.querySelector("div[id]");
-
-            if (hasIdDiv && parentContainer) {
-              // カードコンテナが見つかった場合、その親を使用
-              finalContainer = parentContainer as HTMLElement;
-            } else if (container.querySelector('a[href*="img-original"][target="_blank"]')) {
-              // presentationコンテナ自体がimg-originalを含む場合
-              finalContainer = container as HTMLElement;
-            } else {
-              // その他の場合はリンクの親要素を使用
-              finalContainer = el.parentElement as HTMLElement;
-            }
-          } else {
-            // presentationコンテナが見つからない場合、リンクの親要素を使用
-            finalContainer = el.parentElement as HTMLElement;
-          }
-
-          // プレビューセクションを除外（aria-label="プレビュー"を持つコンテナをスキップ）
-          if (finalContainer && finalContainer.querySelector('[aria-label="プレビュー"]')) {
-            return;
-          }
-
-          if (finalContainer && !containerMap.has(finalContainer)) {
-            containerMap.set(finalContainer, true);
-            containers.push(finalContainer);
-          }
-        });
-      } else {
-        // 直接コンテナ要素の場合
-        containers = elements.filter(el => !el.querySelector('[aria-label="プレビュー"]'));
-      }
-
-      // コンテナにクラスを追加
-      containers.forEach(el => el.classList.add("pixiv-detail-container"));
-
-      return containers;
+    if (masterImages.length === 0) {
+      return [];
     }
-    return [];
+
+    // img-masterの親要素をコンテナとして使用
+    const containers = masterImages
+      .map(img => {
+        let container = img.parentElement;
+        // 適切なコンテナまで遡る
+        while (
+          container &&
+          !container.classList.contains("sc-19z11m8-0") &&
+          !container.querySelector('img[src*="img-master"]')
+        ) {
+          container = container.parentElement;
+        }
+        return container || img.parentElement;
+      })
+      .filter(Boolean) as HTMLElement[];
+
+    // 重複を除去
+    const uniqueContainers = Array.from(new Set(containers));
+
+    // プレビューセクションを除外
+    const filteredContainers = uniqueContainers.filter(
+      container => !container.querySelector('[aria-label="プレビュー"]')
+    );
+
+    // コンテナにクラスを追加
+    filteredContainers.forEach(el => el.classList.add("pixiv-detail-container"));
+
+    return filteredContainers;
   }
 
   private getIllustId(element: HTMLElement): string | null {
