@@ -4,6 +4,7 @@ import { IUrlParser } from "./UrlParser";
 import { IDownloadHandler } from "./DownloadHandler";
 import { ModalManager } from "../../modal";
 import { registerModalManager } from "./ContentStateManager";
+import { I18n } from "../../../i18n";
 
 export interface IContentView {
   addDownloadButtons(): void;
@@ -13,13 +14,19 @@ export interface IContentView {
 }
 
 export class ContentView implements IContentView {
+  private i18n: I18n;
+  private loggedOutText: string;
+
   constructor(
     private buttonFactory: IButtonFactory,
     private domFinder: IDomElementFinder,
     private urlParser: IUrlParser,
     private modalManager: ModalManager,
     private downloadHandler: IDownloadHandler
-  ) {}
+  ) {
+    this.i18n = I18n.getInstance();
+    this.loggedOutText = this.i18n.t("loggedOutLabel");
+  }
 
   addDownloadButtons(): void {
     const illustCards = this.domFinder.findIllustCards();
@@ -102,8 +109,7 @@ export class ContentView implements IContentView {
         }
         const messageDiv = document.createElement("div");
         messageDiv.className = "pixiv-logged-out-label";
-        messageDiv.textContent =
-          "[Pixiv Quick Downloader] パフォーマンス問題のためログアウト状態では使用できません。ログインしてください。";
+        messageDiv.textContent = `[Pixiv Quick Downloader] ${this.loggedOutText}`;
         loggedOutContainer.appendChild(messageDiv);
       }
     }

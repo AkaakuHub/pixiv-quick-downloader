@@ -179,4 +179,13 @@ export const translations: Translations = {
     "zh-HK": "查看全部",
     ko: "모두 보기",
   },
+  loggedOutLabel: {
+    en: "This feature is unavailable when logged out due to performance issues. Please log in.",
+    ja: "パフォーマンス問題のためログアウト状態では使用できません。ログインしてください。",
+    zh: "因性能问题，登出状态下不可用。请登录。",
+    "zh-CN": "因性能问题，登出状态下不可用。请登录。",
+    "zh-TW": "因效能問題，登出狀態下無法使用。請登入。",
+    "zh-HK": "因效能問題，登出狀態下無法使用。請登入。",
+    ko: "성능 문제로 인해 로그아웃 상태에서는 사용할 수 없습니다. 로그인해 주세요.",
+  },
 };
