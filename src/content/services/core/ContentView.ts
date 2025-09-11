@@ -85,22 +85,9 @@ export class ContentView implements IContentView {
     });
   }
 
-  // ログイン状態チェック
-  private checkIsLoggedIn(): boolean {
-    // ログアウト状態の判定: 「アカウントを作成」ボタンが存在するか
-    const buttons = document.querySelectorAll("button.charcoal-button");
-    for (const button of Array.from(buttons)) {
-      if (button.textContent?.trim() === "アカウントを作成") {
-        return true; // ログアウト状態
-      }
-    }
-    return false; // ログイン状態
-  }
-
   addLoggedOutLabel(): void {
-    const isLoggedIn = !this.checkIsLoggedIn();
-    if (!isLoggedIn) {
-      const signupElements = document.querySelectorAll('a[href*="/signup.php"]');
+    const signupElements = document.querySelectorAll('a[href*="/signup.php"]');
+    if (signupElements.length > 1) {
       const loggedOutSelector = signupElements[1]?.parentElement?.parentElement;
       if (loggedOutSelector) {
         const loggedOutContainer = loggedOutSelector as HTMLElement;
